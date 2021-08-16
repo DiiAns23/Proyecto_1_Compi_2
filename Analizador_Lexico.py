@@ -1,3 +1,5 @@
+from TablaSimbolos.Excepcion import Excepcion
+import re
 import ply.lex as lex
 
 errores = []
@@ -16,12 +18,8 @@ reserved = {
     'float'     :   'RFLOATF',
     'string'    :   'RSTRINGF',
     'typeof'    :   'RTYPEOF',
-    'push'      :   'RPUSH',
-    'pop'       :   'RPOP',
-    'length'    :   'RLENGTH',
     'if'        :   'RIF',
     'else'      :   'RELSE',
-    'elseif'    :   'RELSEIF',
     'while'     :   'RWHILE',
     'for'       :   'RFOR',
     'in'        :   'RIN'
@@ -37,6 +35,8 @@ tokens  = [
     'MENOS',
     'POR',
     'DIV',
+    'POT',
+    'MOD',
     'IGUAL',
     'IGUALDAD',
     'DIFERENTE',
@@ -64,6 +64,8 @@ t_MAS           = r'\+'
 t_MENOS         = r'-'
 t_POR           = r'\*'
 t_DIV           = r'\/'
+t_POT           = r'\^'
+t_MOD           = r'\%'
 t_IGUALDAD      = r'=='
 t_IGUAL         = r'\='
 t_DIFERENTE     = r'!='
@@ -147,8 +149,11 @@ t_ignore = " \t"
 
 #Error
 def t_error(t):
-    print("Illegal character '%s'" % t.value[0])
+    errores.append(Excepcion("Lexico", "Error Lexico" + t.value[0], t.lexer.lineno, find_column(input, t)))
     t.lexer.skip(1)
 
-#Crear archivo lexico
-lexer = lex.lex()
+def find_column(inp, tk):
+    line_start = inp.rfind('\n', 0, tk.lexpos) + 1
+    return (tk.lexpos - line_start) + 1
+
+lexer = lex.lex(reflags= re.IGNORECASE)
