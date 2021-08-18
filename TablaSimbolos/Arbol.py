@@ -33,6 +33,9 @@ class Arbol:
     def updateConsola(self, cadena):
         self.consola += str(cadena) + '\n'
     
+    def updateConsola2(self, cadena):
+        self.consola += str(cadena)
+
     def getTSGlobal(self):
         return self.TSglobal
     

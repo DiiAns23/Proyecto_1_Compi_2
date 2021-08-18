@@ -6,6 +6,7 @@ errores = []
 
 reserved = {
     'print'     :   'RPRINT',
+    'println'   :   'RPRINT2',
     'Int64'     :   'RINT',
     'Float64'   :   'RFLOAT',
     'Bool'      :   'RBOOL',
@@ -22,7 +23,9 @@ reserved = {
     'else'      :   'RELSE',
     'while'     :   'RWHILE',
     'for'       :   'RFOR',
-    'in'        :   'RIN'
+    'in'        :   'RIN',
+    'true'      :   'RTRUE',
+    'false'     :   'RFALSE'
 }
 
 tokens  = [
@@ -63,11 +66,11 @@ t_PARD          = r'\)'
 t_MAS           = r'\+'
 t_MENOS         = r'-'
 t_POR           = r'\*'
-t_DIV           = r'\/'
+t_DIV           = r'/'
 t_POT           = r'\^'
-t_MOD           = r'\%'
+t_MOD           = r'%'
 t_IGUALDAD      = r'=='
-t_IGUAL         = r'\='
+t_IGUAL         = r'='
 t_DIFERENTE     = r'!='
 t_MAYOR         = r'>'
 t_MENOR         = r'<'

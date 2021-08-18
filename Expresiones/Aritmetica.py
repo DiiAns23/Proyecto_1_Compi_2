@@ -1,4 +1,3 @@
-import re
 from TablaSimbolos.Simbolo import Simbolo
 from TablaSimbolos.Excepcion import Excepcion
 from TablaSimbolos.Tipo import OperadorAritmetico, TIPO
@@ -135,7 +134,6 @@ class Aritmetica(Instruccion):
                 return - self.getValor(self.opi.tipo, izq)
             return Excepcion("Semantico", "Error en la negacion - unaria", self.fila, self.colum)
         return Excepcion("Semantico", "Tipo de operacion no especificada", self.fila, self.colum)
-
 
     def getValor(self, tipo, val):
         if tipo == TIPO.ENTERO:
