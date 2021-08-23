@@ -18,6 +18,12 @@ class Arbol:
     def setFunciones(self, funciones):
         self.funciones.append(funciones)
     
+    def getFuncion(self, ide):
+        for function in self.funciones:
+            if function.ide == ide:
+                return function
+        return None
+
     def getExcepciones(self):
         return self.excepciones
     

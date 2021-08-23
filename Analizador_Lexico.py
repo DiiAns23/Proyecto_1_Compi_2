@@ -159,4 +159,4 @@ def find_column(inp, tk):
     line_start = inp.rfind('\n', 0, tk.lexpos) + 1
     return (tk.lexpos - line_start) + 1
 
-lexer = lex.lex(reflags= re.IGNORECASE)
+lexer = lex.lex(reflags = re.IGNORECASE)

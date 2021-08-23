@@ -82,6 +82,8 @@ class Relacional(Instruccion):
                 return self.getValor(self.opi.tipo, izq) == self.getValor(self.opd.tipo, der)
             if self.opi.tipo == TIPO.STRING and self.opi.tipo == TIPO.STRING:
                 return self.getValor(self.opi.tipo, izq) == self.getValor(self.opd.tipo, der)
+            if self.opi.tipo == TIPO.BOOL and self.opi.tipo == TIPO.BOOL:
+                return izq == der
             return Excepcion("Semantico", "Error en la operacion ==", self.fila, self.colum)
 
         elif self.op == OperadorRelacional.DIFERENTE:
@@ -95,6 +97,8 @@ class Relacional(Instruccion):
                 return self.getValor(self.opi.tipo, izq) != self.getValor(self.opd.tipo, der)
             if self.opi.tipo == TIPO.STRING and self.opi.tipo == TIPO.STRING:
                 return self.getValor(self.opi.tipo, izq) != self.getValor(self.opd.tipo, der)
+            if self.opi.tipo == TIPO.BOOL and self.opi.tipo == TIPO.BOOL:
+                return izq != der
             return Excepcion("Semantico", "Error en la operacion !=", self.fila, self.colum)
         
         return Excepcion("Semantico", "Error, tipo de operacion no especificada", self.fila, self.colum)
@@ -104,6 +108,6 @@ class Relacional(Instruccion):
             return int(val)
         elif tipo == TIPO.FLOAT:
             return float(val)
-        elif tipo == TIPO.BOOLEANO:
+        elif tipo == TIPO.BOOL:
             return bool(val)
         return str(val)

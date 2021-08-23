@@ -17,6 +17,7 @@ class OperadorAritmetico(Enum):
     POT = 5
     MOD = 6
     UME = 7
+    COMA = 8
 
 class OperadorRelacional(Enum):
     MENOR = 1

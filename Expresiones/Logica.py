@@ -21,15 +21,15 @@ class Logica(Instruccion):
         
         if self.op == OperadorLogico.AND:
             if self.opi.tipo == TIPO.BOOL and self.opd.tipo == TIPO.BOOL:
-                return self.getValor(self.opi.tipo, izq) and self.getValor(self.opd.tipo, der)
+                return izq and der
             return Excepcion("Semantico", "Error en la operacion &&", self.fila, self.colum)
         elif self.op == OperadorLogico.OR:
             if self.opi.tipo == TIPO.BOOL and self.opd.tipo == TIPO.BOOL:
-                return self.getValor(self.opi.tipo, izq) or self.getValor(self.opd.tipo, der)
+                return izq or der
             return Excepcion("Semantico", "Error en la operacion ||", self.fila, self.colum)
         elif self.op == OperadorLogico.NOT:
             if self.opi.tipo == TIPO.BOOL:
-                return not self.getValor(self.opi.tipo, izq)
+                return not izq
             return Excepcion("Semantico", "Error en la operacion ||", self.fila, self.colum)
         return Excepcion("Semantico", "Error, operacion no especificada", self.fila, self.colum)
     
