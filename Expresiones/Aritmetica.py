@@ -1,4 +1,3 @@
-import re
 from TablaSimbolos.Simbolo import Simbolo
 from TablaSimbolos.Excepcion import Excepcion
 from TablaSimbolos.Tipo import OperadorAritmetico, TIPO
@@ -36,7 +35,7 @@ class Aritmetica(Instruccion):
             elif self.opi.tipo == TIPO.FLOAT and self.opd.tipo == TIPO.FLOAT:
                 self.tipo = TIPO.FLOAT
                 return self.getValor(self.opi.tipo, izq) + self.getValor(self.opd.tipo, der)
-            return Excepcion("Semantico", "Error en la potencia + ", self.fila, self.colum)
+            return Excepcion("Semantico", "Error en la suma + ", self.fila, self.colum)
 
         # ----------------------------------------------- RESTA -------------------------------------- #
         elif self.op == OperadorAritmetico.MEN:
@@ -123,7 +122,22 @@ class Aritmetica(Instruccion):
         
         # ----------------------------------------------- MOD -------------------------------------- #
         elif self.op == OperadorAritmetico.MOD:
-            print("Es una potencia")
+            if self.opi.tipo == TIPO.ENTERO and self.opd.tipo == TIPO.ENTERO:
+                self.tipo = TIPO.ENTERO
+                return self.getValor(self.opi.tipo, izq) % self.getValor(self.opd.tipo, der)
+                
+            elif self.opi.tipo == TIPO.ENTERO and self.opd.tipo == TIPO.FLOAT:
+                self.tipo = TIPO.FLOAT
+                return self.getValor(self.opi.tipo, izq) % self.getValor(self.opd.tipo, der)
+
+            elif self.opi.tipo == TIPO.FLOAT and self.opd.tipo == TIPO.ENTERO:
+                self.tipo = TIPO.FLOAT
+                return self.getValor(self.opi.tipo, izq) % self.getValor(self.opd.tipo, der)
+            
+            elif self.opi.tipo == TIPO.FLOAT and self.opd.tipo == TIPO.FLOAT:
+                self.tipo = TIPO.FLOAT
+                return self.getValor(self.opi.tipo, izq) % self.getValor(self.opd.tipo, der)
+            return Excepcion("Semantico", "Error en el moduglo % ", self.fila, self.colum)
 
         # ----------------------------------------------- UME -------------------------------------- #
         elif self.op == OperadorAritmetico.UME:
@@ -134,8 +148,13 @@ class Aritmetica(Instruccion):
                 self.tipo = TIPO.FLOAT
                 return - self.getValor(self.opi.tipo, izq)
             return Excepcion("Semantico", "Error en la negacion - unaria", self.fila, self.colum)
-        return Excepcion("Semantico", "Tipo de operacion no especificada", self.fila, self.colum)
 
+        # ----------------------------------------------- SUMA -------------------------------------- #
+        if self.op == OperadorAritmetico.COMA:
+            self.tipo = TIPO.STRING
+            return str(self.getValor(self.opi.tipo, izq)) + str(self.getValor(self.opd.tipo, der))
+
+        return Excepcion("Semantico", "Tipo de operacion no especificada", self.fila, self.colum)
 
     def getValor(self, tipo, val):
         if tipo == TIPO.ENTERO:

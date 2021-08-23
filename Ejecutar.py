@@ -15,3 +15,5 @@ TsgGlobal = Tabla_Simbolos()
 ast.setTSglobal(TsgGlobal)
 for instruccion in ast.getInst():
     value = instruccion.interpretar(ast,TsgGlobal)
+
+print(ast.getConsola())

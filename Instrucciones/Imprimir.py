@@ -3,7 +3,8 @@ from TablaSimbolos.Excepcion import Excepcion
 from TablaSimbolos.Tipo import TIPO
 
 class Imprimir(Instruccion):
-    def __init__(self, expresion, fila, colum):
+    def __init__(self,inst, expresion, fila, colum):
+        self.inst = inst
         self.exp = expresion
         self.fila = fila
         self.colum = colum
@@ -12,10 +13,9 @@ class Imprimir(Instruccion):
         value = self.exp.interpretar(tree, tabla)
 
         if isinstance(value, Excepcion):
-            print(value)
             return value
-        if self.exp.tipo == TIPO.ARRAY:
-            return Excepcion("Semantico", "No se puede imprimir un arreglo completo", self.fila, self.colum)
-        print(value)
-        tree.updateConsola(value)
+        if self.inst == "println":
+            tree.updateConsola(value)
+        else:
+            tree.updateConsola2(value)
         return None

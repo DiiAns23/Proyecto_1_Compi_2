@@ -1,5 +1,5 @@
 class Simbolo:
-    def __init__(self, ide, tipo, valor, fila, colum):
+    def __init__(self, ide, tipo,fila, colum, valor):
         self.id = ide
         self.tipo = tipo
         self.valor = valor
