@@ -25,11 +25,15 @@ class Llamada_Funcion(Instruccion):
                     simbolo = Simbolo(str(result.params[contador]["ide"]), result.params[contador]['tipo'], self.fila, self.colum, resultE)
                     resultT = entorno.setTabla(simbolo)
                     if isinstance(resultT, Excepcion): return resultT
+                elif result.params[contador]["tipo"] == "NoTipo":
+                    simbolo = Simbolo(str(result.params[contador]["ide"]), expresion.tipo, self.fila, self.colum, resultE)
+                    resultT = entorno.setTabla(simbolo)
+                    if isinstance(resultT, Excepcion): return resultT
                 else:
                     return Excepcion("Semantico", "Parametros no coinciden", self.fila, self.colum)
                 contador += 1
         else:
-            return Excepcion("Semantico", "Parametros incorrectos")
+            return Excepcion("Semantico", "Parametros incorrectos", self.fila,self.colum)
         
         value = result.interpretar(tree, entorno)
         if isinstance(value, Excepcion): return value

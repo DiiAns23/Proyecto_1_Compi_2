@@ -93,7 +93,7 @@ def p_functions_natives(t):
     t[0] = print("Funcion nativa: " + t[1] + " Expresion: "+ str(t[3]))
 
 def p_llamada_function_1(t):
-    'llamada_function : ID PARI parametros PARD'
+    'llamada_function : ID PARI parametros_ll PARD'
     t[0] = Llamada_Funcion(t[1],t[3], t.lineno(1), find_column(input, t.slice[1]))
 
 def p_llamada_function_2(t):
@@ -141,9 +141,26 @@ def p_params2(t):
     'parametro : ID DPUNTOS DPUNTOS tipo'
     t[0] = {'tipo': t[4], 'ide': t[1]}
 
+def p_params3(t):
+    'parametro : ID'
+    t[0] = {'tipo': "NoTipo" , 'ide':t[1]}
+
+def p_params4(t):
+    'parametros_ll : parametros_ll COMA parametro_ll'
+    t[1].append(t[3])
+    t[0] = t[1]
+
+def p_params5(t):
+    'parametros_ll : parametro_ll'
+    t[0] = [t[1]]
+
+def p_params6(t):
+    'parametro_ll : expresion'
+    t[0] = t[1]
+
 def p_expresion_binaria(t):
     '''expresion : expresion MAS expresion
-                  | expresion COMA expresion
+
                   | expresion MENOS expresion
                   | expresion POR expresion
                   | expresion DIV expresion
@@ -263,48 +280,49 @@ def parse(inp):
     input = inp
     return parser.parse(inp)
 
-f = open("./entrada.txt", "r")
-entrada = f.read()
-print("ARCHIVO DE ENTRADA:")
-print(entrada)
-print("")
-print("ARCHIVO DE SALIDA")
-instrucciones = parse(entrada)
-ast = Arbol(instrucciones)
-TsgGlobal = Tabla_Simbolos()
-ast.setTSglobal(TsgGlobal)
+# f = open("./entrada.txt", "r")
+# entrada = f.read()
+# print("ARCHIVO DE ENTRADA:")
+# print("")
+# print(entrada)
+# print("")
+# print("ARCHIVO DE SALIDA:")
+# instrucciones = parse(entrada)
+# ast = Arbol(instrucciones)
+# TsgGlobal = Tabla_Simbolos()
+# ast.setTSglobal(TsgGlobal)
 
-for error in errores:
-    ast.getExcepciones().append(error)
-    ast.updateConsola(error.toString())
+# for error in errores:
+#     ast.getExcepciones().append(error)
+#     ast.updateConsola(error.toString())
 
-for instruccion in ast.getInst():
-    if isinstance(instruccion, Funcion):
-        ast.setFunciones(instruccion)
-    if isinstance(instruccion, Declaracion):
-        value = instruccion.interpretar(ast,TsgGlobal)
-        if isinstance(value, Excepcion):
-            ast.getExcepciones().append(value)
-            ast.updateConsola(value.toString())
+# for instruccion in ast.getInst():
+#     if isinstance(instruccion, Funcion):
+#         ast.setFunciones(instruccion)
+#     if isinstance(instruccion, Declaracion):
+#         value = instruccion.interpretar(ast,TsgGlobal)
+#         if isinstance(value, Excepcion):
+#             ast.getExcepciones().append(value)
+#             ast.updateConsola(value.toString())
 
-for instruccion in ast.getInst():
-    if isinstance(instruccion, Imprimir):
-        value = instruccion.interpretar(ast,TsgGlobal)
-        if isinstance(value, Excepcion):
-            ast.getExcepciones().append(value)
-            ast.updateConsola(value.toString())
-    if isinstance(instruccion, Identificador):
-        value = instruccion.interpretar(ast,TsgGlobal)
-        if isinstance(value, Excepcion):
-            ast.getExcepciones().append(value)
-            ast.updateConsola(value.toString())
-    if isinstance(instruccion, Llamada_Funcion):
-        value = instruccion.interpretar(ast,TsgGlobal)
-        if isinstance(value, Excepcion):
-            ast.getExcepciones().append(value)
-            ast.updateConsola(value.toString())
-    #value = instruccion.interpretar(ast,TsgGlobal)
-    # if isinstance(value, Excepcion):
-    #         ast.getExcepciones().append(value)
-    #         ast.updateConsola(value.toString())
-print(ast.getConsola())
+# for instruccion in ast.getInst():
+#     if isinstance(instruccion, Imprimir):
+#         value = instruccion.interpretar(ast,TsgGlobal)
+#         if isinstance(value, Excepcion):
+#             ast.getExcepciones().append(value)
+#             ast.updateConsola(value.toString())
+#     if isinstance(instruccion, Identificador):
+#         value = instruccion.interpretar(ast,TsgGlobal)
+#         if isinstance(value, Excepcion):
+#             ast.getExcepciones().append(value)
+#             ast.updateConsola(value.toString())
+#     if isinstance(instruccion, Llamada_Funcion):
+#         value = instruccion.interpretar(ast,TsgGlobal)
+#         if isinstance(value, Excepcion):
+#             ast.getExcepciones().append(value)
+#             ast.updateConsola(value.toString())
+#     #value = instruccion.interpretar(ast,TsgGlobal)
+#     # if isinstance(value, Excepcion):
+#     #         ast.getExcepciones().append(value)
+#     #         ast.updateConsola(value.toString())
+# print(ast.getConsola())
