@@ -1,3 +1,11 @@
+from Nativas.Tangente import Tangente
+from Nativas.Raiz import Raiz
+from Nativas.Seno import Seno
+from Nativas.Coseno import Coseno
+from Nativas.Logaritmo_Base import Logaritmo_Base
+from Nativas.Logaritmo import Logaritmo
+from Nativas.LowerCase import LoweCase
+from Nativas.UpperCase import UpperCase
 from Instrucciones.Llamada_Funcion import Llamada_Funcion
 from TablaSimbolos.Excepcion import Excepcion
 from Instrucciones.Funcion import Funcion
@@ -59,6 +67,7 @@ def p_instrucciones_evaluar(t):
                     | declaracion_instr PTCOMA
                     | declaracion_function PTCOMA
                     | llamada_function PTCOMA
+                    | llamada_function
                     | condicional_if PTCOMA
                     | loop_while PTCOMA
                     | loop_for PTCOMA'''
@@ -246,6 +255,10 @@ def p_expresion_false(t):
     'expresion : RFALSE'
     t[0] = Primitivos(TIPO.BOOL, False, t.lineno(1), find_column(input, t.slice[1]))
 
+def p_expresion_llam(t):
+    'expresion : llamada_function'
+    t[0] = t[1]
+
 def p_tipo(t):
     '''tipo : RINT
             | RFLOAT
@@ -262,7 +275,51 @@ def p_tipo(t):
         t[0] = TIPO.CHAR
     elif t[1] == "String":
         t[0] = TIPO.STRING
-    
+
+def agregarNativas(ast):
+    nombre = "uppercase"
+    params = [{'tipo':TIPO.STRING, 'ide':'uppercase##Param1'}]
+    inst = []
+    upper = UpperCase(nombre, params, inst, -1, -1)
+    ast.setFunciones(upper)
+
+    nombre = "lowercase"
+    params = [{'tipo':TIPO.STRING, 'ide':'lowercase##Param1'}]
+    lower = LoweCase(nombre, params, inst, -1, -1)
+    ast.setFunciones(lower)
+
+    nombre = "log10"
+    params = [{'tipo': 'NoTipo', 'ide': 'log10##Param1'}]
+    log_10 = Logaritmo(nombre, params, inst, -1,-1)
+    ast.setFunciones(log_10)
+
+    nombre = "log"
+    params = [{'tipo': 'NoTipo', 'ide': 'log##Param1'}, {'tipo':'NoTipo', 'ide': 'log##Param2'}]
+    log_base = Logaritmo_Base(nombre, params, inst, -1,-1)
+    ast.setFunciones(log_base)
+
+    nombre = "sin"
+    params = [{'tipo': 'NoTipo', 'ide': 'sin##Param1'}]
+    sin = Seno(nombre, params, inst, -1,-1)
+    ast.setFunciones(sin)
+
+    nombre = "cos"
+    params = [{'tipo': 'NoTipo', 'ide': 'cos##Param1'}]
+    cos = Coseno(nombre, params, inst, -1,-1)
+    ast.setFunciones(cos)
+
+    nombre = "tan"
+    params = [{'tipo': 'NoTipo', 'ide': 'tan##Param1'}]
+    tan = Tangente(nombre, params, inst, -1,-1)
+    ast.setFunciones(tan)
+
+    nombre = "sqrt"
+    params = [{'tipo': 'NoTipo', 'ide': 'sqrt##Param1'}]
+    sqrt = Raiz(nombre, params, inst, -1,-1)
+    ast.setFunciones(sqrt)
+
+
+
 def p_error(t):
     print("Error sintáctico en '%s'" % t.value)
 

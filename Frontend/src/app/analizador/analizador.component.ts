@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { from, Observable } from 'rxjs';
 
 import { filter,take } from 'rxjs/operators';
 import{
@@ -128,26 +127,9 @@ export class AnalizadorComponent implements OnInit {
   }
 
   analizar(){
-    var texto = {
-      prueba: this.editorTexto.value
-    }
+
     this.analizarService.Analizer(this.code).subscribe((res)=>{
       this.console  = res
     })
-    console.log(this.code)
   }
-  
-
-  // analizar(){
-  //   var texto = {
-  //     prueba: this.editorTexto.value
-  //   }
-  //   this.analizarService.ejecutar(texto).subscribe((res:any)=>{
-  //     console.log(res)
-  //     this.consola.setValue(res.consola);
-  //     this.arbol = res.arbol;
-  //   }, (err: any)=>{
-  //     console.log(err)
-  //   });
-  // }
 }

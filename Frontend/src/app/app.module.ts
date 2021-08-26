@@ -6,7 +6,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AnalizadorComponent } from './analizador/analizador.component';
 import { MonacoEditorModule,MONACO_PATH } from '@materia-ui/ngx-monaco-editor';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations'
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({

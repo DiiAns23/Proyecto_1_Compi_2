@@ -8,6 +8,7 @@ class TIPO(Enum):
     STRING = 5
     NULO = 6
     ARRAY = 7
+    STRUCT = 8
 
 class OperadorAritmetico(Enum):
     MAS = 1
