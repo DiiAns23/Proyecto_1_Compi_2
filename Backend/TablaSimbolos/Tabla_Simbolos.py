@@ -9,7 +9,7 @@ class Tabla_Simbolos:
     
     def setTabla(self, simbolo):
         if simbolo.id in self.tabla:
-            return Excepcion("Semantico", "Variable " + simbolo.id + " ya existe", simbolo.fila, simbolo.colum)
+            return "Asignacion"
         else:
             self.tabla[simbolo.id] = simbolo
             return None
@@ -29,7 +29,7 @@ class Tabla_Simbolos:
             if simbolo.id in tablaActual.tabla:
                 if tablaActual.tabla[simbolo.id].getTipo() == simbolo.getTipo() or TIPO.NULO:
                     tablaActual.tabla[simbolo.id].setValor(simbolo.getValor())
-                    tablaActual.tabla[simbolo.id].setTipo(simbolo.setTipo())
+                    tablaActual.tabla[simbolo.id].setTipo(simbolo.getTipo())
                     return None
                 return Excepcion("Semantico", "Tipos no coinciden", simbolo.getFila(), simbolo.getColum())
             else:

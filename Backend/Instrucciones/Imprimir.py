@@ -11,9 +11,9 @@ class Imprimir(Instruccion):
     
     def interpretar(self, tree, tabla):
         value = self.exp.interpretar(tree, tabla)
-
         if isinstance(value, Excepcion):
             return value
+
         if self.inst == "println":
             tree.updateConsola(value)
         else:

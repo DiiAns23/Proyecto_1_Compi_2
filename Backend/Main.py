@@ -1,3 +1,5 @@
+from Instrucciones.While import While
+from Instrucciones.For import For
 from flask import Flask, request
 import json
 from flask.helpers import url_for
@@ -24,50 +26,6 @@ CORS(app)
 def analize():
     if request.method == "PUT":
         print("Entro aqui :3")
-        inpt = request.form["inpt"]
-        global tmp_val
-        tmp_val = inpt
-        instrucciones = Analizar(tmp_val)
-        ast = Arbol(instrucciones)
-        TsgGlobal = Tabla_Simbolos()
-        ast.setTSglobal(TsgGlobal)
-
-        for error in errores:
-            ast.getExcepciones().append(error)
-            ast.updateConsola(error.toString())
-
-        for instruccion in ast.getInst():
-            if isinstance(instruccion, Funcion):
-                ast.setFunciones(instruccion)
-            if isinstance(instruccion, Declaracion):
-                value = instruccion.interpretar(ast,TsgGlobal)
-                if isinstance(value, Excepcion):
-                    ast.getExcepciones().append(value)
-                    ast.updateConsola(value.toString())
-
-        for instruccion in ast.getInst():
-            if isinstance(instruccion, Imprimir):
-                value = instruccion.interpretar(ast,TsgGlobal)
-                if isinstance(value, Excepcion):
-                    ast.getExcepciones().append(value)
-                    ast.updateConsola(value.toString())
-            if isinstance(instruccion, Identificador):
-                value = instruccion.interpretar(ast,TsgGlobal)
-                if isinstance(value, Excepcion):
-                    ast.getExcepciones().append(value)
-                    ast.updateConsola(value.toString())
-            if isinstance(instruccion, Llamada_Funcion):
-                value = instruccion.interpretar(ast,TsgGlobal)
-                if isinstance(value, Excepcion):
-                    ast.getExcepciones().append(value)
-                    ast.updateConsola(value.toString())
-            #value = instruccion.interpretar(ast,TsgGlobal)
-            # if isinstance(value, Excepcion):
-            #         ast.getExcepciones().append(value)
-            #         ast.updateConsola(value.toString())
-        print(ast.getConsola())
-        consola = ast.getConsola()
-        return consola
 
 @app.route('/prueba', methods = ["POST", "GET"])
 def prueba():
@@ -93,18 +51,13 @@ def salida():
     for instruccion in ast.getInst():
         if isinstance(instruccion, Funcion):
             ast.setFunciones(instruccion)
-        if isinstance(instruccion, Declaracion):
-            value = instruccion.interpretar(ast,TsgGlobal)
-            if isinstance(value, Excepcion):
-                ast.getExcepciones().append(value)
-                ast.updateConsola(value.toString())
+        # if isinstance(instruccion, Declaracion):
+        #     value = instruccion.interpretar(ast,TsgGlobal)
+        #     if isinstance(value, Excepcion):
+        #         ast.getExcepciones().append(value)
+        #         ast.updateConsola(value.toString())
 
     for instruccion in ast.getInst():
-        if isinstance(instruccion, Imprimir):
-            value = instruccion.interpretar(ast,TsgGlobal)
-            if isinstance(value, Excepcion):
-                ast.getExcepciones().append(value)
-                ast.updateConsola(value.toString())
         if isinstance(instruccion, Identificador):
             value = instruccion.interpretar(ast,TsgGlobal)
             if isinstance(value, Excepcion):
@@ -120,7 +73,26 @@ def salida():
             if isinstance(value, Excepcion):
                 ast.getExcepciones().append(value)
                 ast.updateConsola(value.toString())
-
+        if isinstance(instruccion, Imprimir):
+            value = instruccion.interpretar(ast,TsgGlobal)
+            if isinstance(value, Excepcion):
+                ast.getExcepciones().append(value)
+                ast.updateConsola(value.toString())
+        if isinstance(instruccion, Declaracion):
+            value = instruccion.interpretar(ast,TsgGlobal)
+            if isinstance(value, Excepcion):
+                ast.getExcepciones().append(value)
+                ast.updateConsola(value.toString())
+        if isinstance(instruccion, For):
+            value = instruccion.interpretar(ast,TsgGlobal)
+            if isinstance(value, Excepcion):
+                ast.getExcepciones().append(value)
+                ast.updateConsola(value.toString())
+        if isinstance(instruccion, While):
+            value = instruccion.interpretar(ast,TsgGlobal)
+            if isinstance(value, Excepcion):
+                ast.getExcepciones().append(value)
+                ast.updateConsola(value.toString())
     consola = ast.getConsola()
     return json.dumps(consola)
 

@@ -1,3 +1,5 @@
+from Instrucciones.For import For
+from Instrucciones.While import While
 from Nativas.Tangente import Tangente
 from Nativas.Raiz import Raiz
 from Nativas.Seno import Seno
@@ -49,6 +51,7 @@ def p_init(t):
     'init : instrucciones'
     t[0] = t[1]
 
+
 def p_instrucciones_lista(t):
     'instrucciones    : instrucciones instruccion'
     if t[2] != "":
@@ -89,6 +92,11 @@ def p_declaracion_non_tipo(t):
     '''declaracion_instr : ID IGUAL expresion'''
     t[0] = Declaracion(t[1], t.lineno(2), find_column(input, t.slice[2]),None, t[3])
 
+def p_declaracion_null(t):
+    'declaracion_instr : ID'
+    t[0] = Declaracion(t[1], t.lineno(1), find_column(input, t.slice[1]),None,None)
+
+
 def p_tipof_1(t):
     '''tipo_f : RPARSE
                 | RTRUNC
@@ -127,15 +135,23 @@ def p_condicional_if_2(t):
 
 def p_loop_while_1(t):
     '''loop_while : RWHILE expresion instrucciones REND'''
-    t[0] = print("Loop While: " + str(t[2]))
+    t[0] = While(t[2], t[3], t.lineno(1), find_column(input, t.slice[1]))
 
 def p_loop_for_1(t):
-    '''loop_for : RFOR expresion RIN rango instrucciones REND'''
-    t[0] = print("Loop For: " + str(t[4]))
+    '''loop_for : RFOR declaracion_instr RIN rango instrucciones REND'''
+    t[0] = For(t[2], t[4], t[5], t.lineno(1), find_column(input, t.slice[1]))
 
 def p_rango(t):
-    'rango : ENTERO DPUNTOS ENTERO'
+    'rango : rangoaux DPUNTOS rangoaux'
     t[0] = [t[1], t[3]]
+
+def p_rango2(t):
+    'rango : expresion'
+    t[0] = [t[1]]
+
+def p_rango3(t):
+    'rangoaux : ENTERO'
+    t[0] = Primitivos(TIPO.ENTERO, t[1], t.lineno(1), find_column(input, t.slice[1]))
     
 def p_params(t):
     'parametros : parametros COMA parametro'
