@@ -1,3 +1,12 @@
+from Expresiones.Array import Array
+from Nativas.Float import Float
+from Nativas.Typeof import Typeof
+from Nativas.Length import Length
+from Nativas.Parse import Parse
+from Instrucciones.Asignacion import Asignacion
+from Instrucciones.Continue import Continue
+from Instrucciones.Break import Break
+from Instrucciones.Return import Return
 from Instrucciones.For import For
 from Instrucciones.While import While
 from Nativas.Tangente import Tangente
@@ -71,9 +80,14 @@ def p_instrucciones_evaluar(t):
                     | declaracion_function PTCOMA
                     | llamada_function PTCOMA
                     | llamada_function
-                    | condicional_if PTCOMA
+                    | condicional_if REND PTCOMA
                     | loop_while PTCOMA
-                    | loop_for PTCOMA'''
+                    | loop_for PTCOMA
+                    | r_return PTCOMA
+                    | r_break  PTCOMA
+                    | r_continue PTCOMA
+                    | asignacion_array PTCOMA
+                    '''
     t[0] = t[1]
 
 def p_imprimir(t):
@@ -92,22 +106,34 @@ def p_declaracion_non_tipo(t):
     '''declaracion_instr : ID IGUAL expresion'''
     t[0] = Declaracion(t[1], t.lineno(2), find_column(input, t.slice[2]),None, t[3])
 
-def p_declaracion_null(t):
-    'declaracion_instr : ID'
+
+def p_declaracion_for(t):
+    'declaracion_instr  :   ID'
     t[0] = Declaracion(t[1], t.lineno(1), find_column(input, t.slice[1]),None,None)
 
+def p_declaracion_local(t):
+    '''declaracion_instr : RLOCAL ID'''
+    t[0] = Declaracion(t[2], t.lineno(1), find_column(input, t.slice[1]),None,None)
 
-def p_tipof_1(t):
-    '''tipo_f : RPARSE
-                | RTRUNC
-                | RFLOATF
-                | RSTRINGF
-                | RTYPEOF'''
-    t[0] = t[1]
+def p_declaracion_local1(t):
+    '''declaracion_instr : RLOCAL ID IGUAL expresion'''
+    t[0] = Declaracion(t[2], t.lineno(1), find_column(input, t.slice[1]),None,t[4])
 
-def p_functions_natives(t):
-    '''llamada_function : tipo_f PARI expresion PARD'''
-    t[0] = print("Funcion nativa: " + t[1] + " Expresion: "+ str(t[3]))
+def p_declaracion_global(t):
+    'declaracion_instr : RGLOBAL ID'
+    t[0] = Declaracion(t[2], t.lineno(1), find_column(input, t.slice[1]),None,None)
+
+def p_declaracion_global1(t):
+    '''declaracion_instr : RGLOBAL ID IGUAL expresion'''
+    t[0] = Declaracion(t[2], t.lineno(1), find_column(input, t.slice[1]),None,t[4])
+
+def p_declaracion_array(t):
+    'declaracion_instr : ID IGUAL CORI parametros_ll CORD'
+    t[0] = Declaracion(t[1], t.lineno(1), find_column(input, t.slice[1]), TIPO.ARRAY, t[4])
+
+def p_asignacion_array(t):
+    'asignacion_array : ID arrays_1 IGUAL expresion'
+    t[0] = Asignacion(t[1], t[2], t.lineno(1), find_column(input, t.slice[1]), t[4])
 
 def p_llamada_function_1(t):
     'llamada_function : ID PARI parametros_ll PARD'
@@ -126,12 +152,16 @@ def p_declaracion_function_2(t):
     t[0] = Funcion(t[2], [], t[5], t.lineno(2), find_column(input, t.slice[1]))
 
 def p_condicional_if_1(t):
-    '''condicional_if : RIF expresion instrucciones REND'''
+    '''condicional_if : RIF expresion instrucciones'''
     t[0] = If(t[2],t[3],None, None, t.lineno(1), find_column(input, t.slice[1]))
 
 def p_condicional_if_2(t):
-    '''condicional_if : RIF expresion instrucciones RELSE instrucciones REND'''
+    '''condicional_if : RIF expresion instrucciones RELSE instrucciones'''
     t[0] = If(t[2],t[3],t[5], None, t.lineno(1), find_column(input, t.slice[1]))
+
+def p_condicional_if_3(t):
+    '''condicional_if : RIF expresion instrucciones RELSE condicional_if'''
+    t[0] = If(t[2],t[3],None, t[5], t.lineno(1), find_column(input, t.slice[1]))
 
 def p_loop_while_1(t):
     '''loop_while : RWHILE expresion instrucciones REND'''
@@ -141,17 +171,21 @@ def p_loop_for_1(t):
     '''loop_for : RFOR declaracion_instr RIN rango instrucciones REND'''
     t[0] = For(t[2], t[4], t[5], t.lineno(1), find_column(input, t.slice[1]))
 
+def p_return(t):
+    'r_return : RRETURN expresion'
+    t[0] = Return(t[2], t.lineno(1), find_column(input, t.slice[1]))
+
+def p_break(t):
+    'r_break : RBREAK'
+    t[0] = Break(t.lineno(1), find_column(input, t.slice[1]))
+
+def p_continue(t):
+    'r_continue : RCONTINUE'
+    t[0] = Continue(t.lineno(1), find_column(input, t.slice[1]))
+
 def p_rango(t):
-    'rango : rangoaux DPUNTOS rangoaux'
+    'rango : expresion DPUNTOS expresion'
     t[0] = [t[1], t[3]]
-
-def p_rango2(t):
-    'rango : expresion'
-    t[0] = [t[1]]
-
-def p_rango3(t):
-    'rangoaux : ENTERO'
-    t[0] = Primitivos(TIPO.ENTERO, t[1], t.lineno(1), find_column(input, t.slice[1]))
     
 def p_params(t):
     'parametros : parametros COMA parametro'
@@ -180,7 +214,27 @@ def p_params5(t):
     t[0] = [t[1]]
 
 def p_params6(t):
-    'parametro_ll : expresion'
+    '''parametro_ll : expresion
+                    | RINT
+                    | RFLOAT'''
+    if t[1] == "Int64":
+        t[0] = Primitivos(TIPO.ENTERO, "Int64", t.lineno(1), find_column(input, t.slice[1]))
+    elif t[1] == "Float64":
+        t[0] = Primitivos(TIPO.FLOAT, "Float", t.lineno(1), find_column(input, t.slice[1]))
+    else:
+        t[0] = t[1]
+
+def p_params7(t):
+    'arrays_1 :  arrays_1 CORI arrays_2 CORD'
+    t[1].append(t[3])
+    t[0] = t[1]
+
+def p_params8(t):
+    'arrays_1 : CORI arrays_2 CORD'
+    t[0] = [t[2]]
+
+def p_params9(t):
+    'arrays_2 : expresion'
     t[0] = t[1]
 
 def p_expresion_binaria(t):
@@ -245,7 +299,11 @@ def p_expresion_agrupacion(t):
 
 def p_expresion_identificador(t):
     '''expresion : ID'''
-    t[0] = Identificador(t[1], t.lineno(1), find_column(input, t.slice[1]))
+    t[0] = Identificador(t[1], t.lineno(1), find_column(input, t.slice[1]), None)
+
+def p_expresion_array(t):
+    'expresion : ID arrays_1'
+    t[0] = Array(t[1], t.lineno(1), find_column(input, t.slice[1]), TIPO.ARRAY, t[2])
 
 def p_expresion_entero(t):
     'expresion : ENTERO'
@@ -334,8 +392,26 @@ def agregarNativas(ast):
     sqrt = Raiz(nombre, params, inst, -1,-1)
     ast.setFunciones(sqrt)
 
+    nombre = "parse"
+    params = [{'tipo': 'NoTipo', 'ide': 'parse##Param1'}, {'tipo':TIPO.STRING, 'ide': 'parse##Param2'}]
+    parse = Parse(nombre, params, inst, -1,-1)
+    ast.setFunciones(parse)
 
+    nombre = "length"
+    params = [{'tipo':'NoTipo', 'ide':'length##Param1'}]
+    length = Length(nombre, params, inst, -1, -1)
+    ast.setFunciones(length)
 
+    nombre = "typeof"
+    params = [{'tipo':'NoTipo', 'ide':'typeof##Param1'}]
+    typeof = Typeof(nombre, params, inst, -1, -1)
+    ast.setFunciones(typeof)
+
+    nombre = "float"
+    params = [{'tipo':TIPO.ENTERO, 'ide':'float##Param1'}]
+    floats = Float(nombre, params, inst, -1, -1)
+    ast.setFunciones(floats)
+    
 def p_error(t):
     print("Error sintáctico en '%s'" % t.value)
 

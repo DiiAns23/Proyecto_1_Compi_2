@@ -14,18 +14,18 @@ reserved = {
     'String'    :   'RSTRING',
     'function'  :   'RFUNCTION',
     'end'       :   'REND',
-    'parse'     :   'RPARSE',
-    'trunc'     :   'RTRUNC',
-    'float'     :   'RFLOATF',
-    'string'    :   'RSTRINGF',
-    'typeof'    :   'RTYPEOF',
     'if'        :   'RIF',
     'else'      :   'RELSE',
     'while'     :   'RWHILE',
     'for'       :   'RFOR',
     'in'        :   'RIN',
     'true'      :   'RTRUE',
-    'false'     :   'RFALSE'
+    'false'     :   'RFALSE',
+    'return'    :   'RRETURN',
+    'break'     :   'RBREAK',
+    'continue'  :   'RCONTINUE',
+    'local'     :   'RLOCAL',
+    'global'    :   'RGLOBAL'
 }
 
 tokens  = [
@@ -54,7 +54,9 @@ tokens  = [
     'DECIMAL',
     'CADENA',
     'CHAR',
-    'ID'
+    'ID',
+    'CORI',
+    'CORD'
 ]+ list(reserved.values())
 
 # Tokens
@@ -79,7 +81,8 @@ t_MENORI        = r'<='
 t_OR            = r'\|\|'
 t_AND           = r'&&'
 t_NOT           = r'!'
-
+t_CORI          = r'\['
+t_CORD          = r'\]'
 
 #Decimal
 def t_DECIMAL(t):

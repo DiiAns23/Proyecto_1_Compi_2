@@ -1,5 +1,6 @@
-from Instrucciones.While import While
-from Instrucciones.For import For
+from Instrucciones.Continue import Continue
+from Instrucciones.Break import Break
+from Instrucciones.Return import Return
 from flask import Flask, request
 import json
 from flask.helpers import url_for
@@ -8,14 +9,8 @@ from Analizador_Sintactico import parse as Analizar
 from TablaSimbolos.Arbol import Arbol
 from TablaSimbolos.Excepcion import Excepcion
 from TablaSimbolos.Tabla_Simbolos import Tabla_Simbolos
-from Analizador_Lexico import tokens
-from Analizador_Lexico import lexer, errores
-from Instrucciones.Declaracion import Declaracion
+from Analizador_Lexico import errores, tokens, lexer
 from Instrucciones.Funcion import Funcion
-from Instrucciones.Imprimir import Imprimir
-from Expresiones.Identificador import Identificador
-from Instrucciones.Llamada_Funcion import Llamada_Funcion
-from Instrucciones.If import If
 from Analizador_Sintactico import agregarNativas as Nativas
 from flask_cors import CORS
 
@@ -51,48 +46,25 @@ def salida():
     for instruccion in ast.getInst():
         if isinstance(instruccion, Funcion):
             ast.setFunciones(instruccion)
-        # if isinstance(instruccion, Declaracion):
-        #     value = instruccion.interpretar(ast,TsgGlobal)
-        #     if isinstance(value, Excepcion):
-        #         ast.getExcepciones().append(value)
-        #         ast.updateConsola(value.toString())
 
     for instruccion in ast.getInst():
-        if isinstance(instruccion, Identificador):
-            value = instruccion.interpretar(ast,TsgGlobal)
+        if not (isinstance(instruccion, Funcion)):
+            value = instruccion.interpretar(ast, TsgGlobal)
             if isinstance(value, Excepcion):
                 ast.getExcepciones().append(value)
                 ast.updateConsola(value.toString())
-        if isinstance(instruccion, Llamada_Funcion):
-            value = instruccion.interpretar(ast,TsgGlobal)
-            if isinstance(value, Excepcion):
-                ast.getExcepciones().append(value)
-                ast.updateConsola(value.toString())
-        if isinstance(instruccion, If):
-            value = instruccion.interpretar(ast,TsgGlobal)
-            if isinstance(value, Excepcion):
-                ast.getExcepciones().append(value)
-                ast.updateConsola(value.toString())
-        if isinstance(instruccion, Imprimir):
-            value = instruccion.interpretar(ast,TsgGlobal)
-            if isinstance(value, Excepcion):
-                ast.getExcepciones().append(value)
-                ast.updateConsola(value.toString())
-        if isinstance(instruccion, Declaracion):
-            value = instruccion.interpretar(ast,TsgGlobal)
-            if isinstance(value, Excepcion):
-                ast.getExcepciones().append(value)
-                ast.updateConsola(value.toString())
-        if isinstance(instruccion, For):
-            value = instruccion.interpretar(ast,TsgGlobal)
-            if isinstance(value, Excepcion):
-                ast.getExcepciones().append(value)
-                ast.updateConsola(value.toString())
-        if isinstance(instruccion, While):
-            value = instruccion.interpretar(ast,TsgGlobal)
-            if isinstance(value, Excepcion):
-                ast.getExcepciones().append(value)
-                ast.updateConsola(value.toString())
+            if isinstance(value, Return):
+                err = Excepcion("Semantico", "Return fuera de ciclo", instruccion.fila, instruccion.colum)
+                ast.getExcepciones().append(err)
+                ast.updateConsola(err.toString())
+            if isinstance(value, Break):
+                err = Excepcion("Semantico", "Break fuera de ciclo", instruccion.fila, instruccion.colum)
+                ast.getExcepciones().append(err)
+                ast.updateConsola(err.toString())
+            if isinstance(value, Continue):
+                err = Excepcion("Semantico", "Continue fuera de ciclo", instruccion.fila, instruccion.colum)
+                ast.getExcepciones().append(err)
+                ast.updateConsola(err.toString())
     consola = ast.getConsola()
     return json.dumps(consola)
 

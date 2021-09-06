@@ -1,3 +1,6 @@
+from Instrucciones.Declaracion import Declaracion
+from Instrucciones.Break import Break
+from Instrucciones.Return import Return
 from TablaSimbolos.Tipo import TIPO
 from TablaSimbolos.Tabla_Simbolos import Tabla_Simbolos
 from Abstrac.Instruccion import Instruccion
@@ -20,6 +23,13 @@ class Funcion(Instruccion):
             if isinstance(value, Excepcion): 
                 tree.getExepciones().append(value)
                 tree.updateConsola(value.toString())
+            if isinstance(value, Return):
+                self.tipo = value.tipo
+                return value.value
+            if isinstance(value, Break):
+                error  = Excepcion("Semantico", "Break fuera de ciclo", ins.fila, ins.colum)
+                tree.getExcepciones().append(error)
+                tree.updateConsola(error.toString())
         return None
         
         
