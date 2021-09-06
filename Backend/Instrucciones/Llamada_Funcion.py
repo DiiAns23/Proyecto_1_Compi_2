@@ -23,11 +23,11 @@ class Llamada_Funcion(Instruccion):
                 if isinstance(resultE, Excepcion): return resultE
                 if result.params[contador]["tipo"] == expresion.tipo:
                     simbolo = Simbolo(str(result.params[contador]["ide"]), result.params[contador]['tipo'], self.fila, self.colum, resultE)
-                    resultT = entorno.setTabla(simbolo)
+                    resultT = entorno.setTablaFuncion(simbolo)
                     if isinstance(resultT, Excepcion): return resultT
                 elif result.params[contador]["tipo"] == "NoTipo":
                     simbolo = Simbolo(str(result.params[contador]["ide"]), expresion.tipo, self.fila, self.colum, resultE)
-                    resultT = entorno.setTabla(simbolo)
+                    resultT = entorno.setTablaFuncion(simbolo)
                     if isinstance(resultT, Excepcion): return resultT
                 else:
                     return Excepcion("Semantico", "Parametros no coinciden", self.fila, self.colum)

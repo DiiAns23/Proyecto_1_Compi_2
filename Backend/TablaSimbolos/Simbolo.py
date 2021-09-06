@@ -1,4 +1,6 @@
-class Simbolo:
+# from Abstrac.Instruccion import Instruccion
+
+class Simbolo():
     def __init__(self, ide, tipo,fila, colum, valor):
         self.id = ide
         self.tipo = tipo
@@ -21,7 +23,23 @@ class Simbolo:
     def getValor(self):
         return self.valor
     
+    def getValorArray(self, indice = None):
+        if indice:
+            try:
+                return self.valor[indice]
+            except:
+                return None
+        return self.valor
+    
     def setValor(self, valor):
+        self.valor = valor
+    
+    def setValorArray(self, valor, indice = None):
+        if indice:
+            try:
+                ''
+            except:
+                ''
         self.valor = valor
 
     def getFila(self):
@@ -31,8 +49,7 @@ class Simbolo:
         self.fila = fila
     
     def getColum(self):
-        return self.valor
+        return self.colum
     
     def setColum(self, colum):
         self.colum = colum
-    
