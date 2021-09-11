@@ -10,3 +10,5 @@ class Primitivos(Instruccion):
     def interpretar(self, tree, table):
         return self.valor
         
+    def getTipo(self):
+        return self.tipo

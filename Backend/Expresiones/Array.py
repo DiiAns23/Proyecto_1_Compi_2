@@ -1,3 +1,4 @@
+from typing import List
 from Abstrac.Instruccion import Instruccion
 from TablaSimbolos.Tipo import TIPO
 
@@ -8,6 +9,7 @@ class Array(Instruccion):
         self.colum = columna
         self.tipo = tipo
         self.indices = indice
+        self.referencia = 0
 
     def interpretar(self, tree, table):
         simbolo = table.getTabla(self.ide)
@@ -17,17 +19,16 @@ class Array(Instruccion):
 
         if self.indices:
             valores = simbolo.getValor()
+            indices = []
             for indice in self.indices:
                 index = indice.interpretar(tree, table)
                 if index > 0:
-                    try:
-                        valores = valores[index-1]
-                    except:
-                        error = "Semantico - Indice fuera de rango " + "[" + str(self.fila) + ", " + str(self.colum) + "]"
-                        return error 
+                    indices.append(index)
                 else:
                     error = "Semantico - Indice fuera de rango " + "[" + str(self.fila) + ", " + str(self.colum) + "]"
-                    return error 
+                    return error
+            self.indices = indices
+            valores = self.getValores(valores) 
         return valores
 
     def getTipo(self):
@@ -35,3 +36,13 @@ class Array(Instruccion):
     
     def getID(self):
         return self.ide
+    
+    def getValores(self,anterior):
+        actual = anterior
+        for indice in self.indices:
+            try:
+                self.tipo = actual[indice-1].getTipo()
+                actual = actual[indice-1].getValor()
+            except:
+                actual = "Semantico - Indice fuera de rango " + "[" + str(self.fila) + ", " + str(self.colum) + "]"
+        return actual 
