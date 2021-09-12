@@ -1,3 +1,5 @@
+from Nativas.Pop import Pop
+from Nativas.Push import Push
 from Expresiones.Array import Array
 from Nativas.Float import Float
 from Nativas.Typeof import Typeof
@@ -130,7 +132,8 @@ def p_declaracion_array(t):
     t[0] = Declaracion(t[1], t.lineno(1), find_column(input, t.slice[1]), TIPO.ARRAY, t[4])
 
 def p_declaracion_array_2(t):
-    '''declaracion_instr : ID IGUAL'''
+    'declaracion_instr : ID IGUAL CORI parametros_ll CORD DPUNTOS DPUNTOS tipo'
+    t[0] = Declaracion(t[1], t.lineno(1), find_column(input, t.slice[1]), t[8], t[4])
 
 def p_asignacion_array(t):
     'asignacion_array : ID arrays_1 IGUAL expresion'
@@ -359,7 +362,8 @@ def p_tipo(t):
             | RFLOAT
             | RBOOL
             | RCHAR
-            | RSTRING'''
+            | RSTRING
+            | RLIST'''
     if t[1] ==  "Int64":
         t[0] = TIPO.ENTERO
     elif t[1] == "Float64":
@@ -370,6 +374,8 @@ def p_tipo(t):
         t[0] = TIPO.CHAR
     elif t[1] == "String":
         t[0] = TIPO.STRING
+    elif t[1] == "List":
+        t[0] = TIPO.ARRAY
 
 def agregarNativas(ast):
     nombre = "uppercase"
@@ -432,6 +438,17 @@ def agregarNativas(ast):
     params = [{'tipo':TIPO.ENTERO, 'ide':'float##Param1'}]
     floats = Float(nombre, params, inst, -1, -1)
     ast.setFunciones(floats)
+
+    nombre = "push"
+    params = [{'tipo':TIPO.ARRAY, 'ide':'push##Param1'}, {'tipo':'NoTipo', 'ide':'push##Param2'}]
+    push = Push(nombre, params, inst, -1,-1)
+    ast.setFunciones(push)
+
+    nombre = "pop"
+    params = [{'tipo':TIPO.ARRAY, 'ide':'pop##Param1'}]
+    pop = Pop(nombre, params, inst, -1,-1)
+    ast.setFunciones(pop)
+
     
 def p_error(t):
     print("Error sintáctico en '%s'" % t.value)

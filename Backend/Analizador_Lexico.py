@@ -25,7 +25,8 @@ reserved = {
     'break'     :   'RBREAK',
     'continue'  :   'RCONTINUE',
     'local'     :   'RLOCAL',
-    'global'    :   'RGLOBAL'
+    'global'    :   'RGLOBAL',
+    'List'      :   'RLIST'
 }
 
 tokens  = [
