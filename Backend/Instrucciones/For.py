@@ -88,5 +88,3 @@ class For(Instruccion):
                 if isinstance(result, Break): return None
                 if isinstance(result, Continue): break
         return None
-
-        

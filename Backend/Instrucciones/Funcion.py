@@ -1,3 +1,4 @@
+from Instrucciones.Asignacion import Asignacion
 from Instrucciones.Declaracion import Declaracion
 from Instrucciones.Break import Break
 from Instrucciones.Return import Return
@@ -19,7 +20,10 @@ class Funcion(Instruccion):
     def interpretar(self, tree, table):
         entorno = Tabla_Simbolos(table)
         for ins in self.inst:
-            value = ins.interpretar(tree, entorno)
+            if isinstance(ins, Asignacion) or isinstance(ins, Declaracion):
+                value = ins.interpretar(tree, table)
+            else:
+                value = ins.interpretar(tree, entorno)
             if isinstance(value, Excepcion): 
                 tree.getExepciones().append(value)
                 tree.updateConsola(value.toString())

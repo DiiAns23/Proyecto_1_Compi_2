@@ -24,9 +24,9 @@ class Asignacion(Instruccion):
                     if indice > 0:
                         indices.append(indice)
                     else:
-                        return Excepcion("Semantico", "No se ha encontrado el indice ["+str(indice)+"] ", self.fila, self.colum)
+                        return Excepcion("Semantico", "No se ha encontrado el indice " , self.fila, self.colum)
                 except:
-                    return Excepcion("Semantico", "No se ha encontrado el indice ["+str(indice+1)+"] ", self.fila, self.colum)
+                    return Excepcion("Semantico", "No se ha encontrado el indice " , self.fila, self.colum)
             simbolo = Simbolo(self.ide, self.valor.getTipo(), self.fila, self.colum, value)
             result = table.setTabla(simbolo)
             if result == "Asignacion":
