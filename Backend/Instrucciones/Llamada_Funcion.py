@@ -1,3 +1,5 @@
+from typing import List
+from TablaSimbolos.Tipo import TIPO
 from TablaSimbolos.Tabla_Simbolos import Tabla_Simbolos
 from TablaSimbolos.Simbolo import Simbolo
 from Instrucciones.Funcion import Funcion

@@ -60,7 +60,6 @@ def p_init(t):
     'init : instrucciones'
     t[0] = t[1]
 
-
 def p_instrucciones_lista(t):
     'instrucciones    : instrucciones instruccion'
     if t[2] != "":
@@ -106,7 +105,6 @@ def p_declaracion_non_tipo(t):
     '''declaracion_instr : ID IGUAL expresion'''
     t[0] = Declaracion(t[1], t.lineno(2), find_column(input, t.slice[2]),None, t[3])
 
-
 def p_declaracion_for(t):
     'declaracion_instr  :   ID'
     t[0] = Declaracion(t[1], t.lineno(1), find_column(input, t.slice[1]),None,None)
@@ -130,6 +128,9 @@ def p_declaracion_global1(t):
 def p_declaracion_array(t):
     'declaracion_instr : ID IGUAL CORI parametros_ll CORD'
     t[0] = Declaracion(t[1], t.lineno(1), find_column(input, t.slice[1]), TIPO.ARRAY, t[4])
+
+def p_declaracion_array_2(t):
+    '''declaracion_instr : ID IGUAL'''
 
 def p_asignacion_array(t):
     'asignacion_array : ID arrays_1 IGUAL expresion'
@@ -170,6 +171,14 @@ def p_loop_while_1(t):
 def p_loop_for_1(t):
     '''loop_for : RFOR declaracion_instr RIN rango instrucciones REND'''
     t[0] = For(t[2], t[4], t[5], t.lineno(1), find_column(input, t.slice[1]))
+
+def p_loop_for_2(t):
+    '''loop_for : RFOR declaracion_instr RIN expresion instrucciones REND'''
+    t[0] = For(t[2], [t[4]], t[5], t.lineno(1), find_column(input, t.slice[1]))
+
+def p_loop_for_3(t):
+    '''loop_for : RFOR declaracion_instr RIN CORI parametros_ll CORD instrucciones REND'''
+    t[0] = For(t[2], [t[5]], t[7], t.lineno(1), find_column(input, t.slice[1]))
 
 def p_return(t):
     'r_return : RRETURN expresion'
@@ -304,6 +313,18 @@ def p_expresion_identificador(t):
 def p_expresion_array(t):
     'expresion : ID arrays_1'
     t[0] = Array(t[1], t.lineno(1), find_column(input, t.slice[1]), TIPO.ARRAY, t[2])
+
+def p_expresion_array_2(t):
+    'expresion : ID CORI DPUNTOS CORD'
+    t[0] = Array(t[1], t.lineno(1), find_column(input, t.slice[1]), TIPO.ARRAY, None)
+
+def p_expresion_array_3(t):
+    'expresion : ID CORI expresion DPUNTOS expresion CORD'
+    t[0] = Array(t[1], t.lineno(1), find_column(input, t.slice[1]), TIPO.ARRAY, None ,[t[3], t[5]])
+
+def p_expresion_array_4(t):
+    'expresion : CORI parametros_ll CORD'
+    t[0] = Array(None, t.lineno(1), find_column(input, t.slice[1]), TIPO.ARRAY,None, t[2])
 
 def p_expresion_entero(t):
     'expresion : ENTERO'

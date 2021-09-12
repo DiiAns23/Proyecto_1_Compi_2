@@ -13,7 +13,6 @@ class Identificador(Instruccion):
         if simbolo == None:
             error = "Semantico - Variable o valor no encontrados " + "[" + str(self.fila) + ", " + str(self.colum) + "]"
             return error
-
         self.tipo = simbolo.getTipo()
         return simbolo.getValor()
 

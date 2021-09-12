@@ -1,3 +1,4 @@
+from typing import List
 from TablaSimbolos.Tipo import TIPO
 from TablaSimbolos.Excepcion import Excepcion
 
@@ -34,16 +35,6 @@ class Tabla_Simbolos:
                 tablaActual = tablaActual.anterior
         return None
     
-    def getArray(self, simbolo):
-        tablaActual = self
-        while tablaActual != None:
-            if simbolo in tablaActual.tabla:
-                datos = tablaActual.tabla[simbolo].getValor()
-                return datos
-            else:
-                tablaActual = tablaActual.anterior
-        return Excepcion("Semantico", "Array no encontrado", simbolo.getFila(), simbolo.getColum())
-    
     def updateTabla(self, simbolo):
         tablaActual = self
         while tablaActual != None:
@@ -61,5 +52,23 @@ class Tabla_Simbolos:
         tablaActual = self
         while tablaActual != None:
             if simbolo.id in tablaActual.tabla:
-                for index in indices:
-                    ''
+                actual = tablaActual.tabla[simbolo.id].getValor()
+                x = 0
+                for indice in indices:
+                    if x == (len(indices)-1):
+                        try:
+                            actual = actual[indice - 1]
+                            actual.setValor(simbolo.getValor())
+                            actual.setTipo(simbolo.getTipo())
+                        except:
+                            return Excepcion("Semantico","Indices fuera de rango", simbolo.getFila(), simbolo.getColum())
+                    else:
+                        try:
+                            actual = actual[indice-1].getValor()
+                        except:
+                            return Excepcion("Semantico", "Indices fuera de rango", simbolo.getFila(), simbolo.getColum())
+                    x += 1
+                return None
+            else:
+                tablaActual = tablaActual.anterior
+        return Excepcion("Semantico", "Variable no encontrada", simbolo.getFila(), simbolo.getColum())

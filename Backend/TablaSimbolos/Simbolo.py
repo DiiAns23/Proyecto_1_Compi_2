@@ -23,7 +23,7 @@ class Simbolo():
     def getValor(self):
         return self.valor
     
-    def getValorArray(self, indice = None):
+    def getValorArray(self, indice):
         if indice:
             try:
                 return self.valor[indice]

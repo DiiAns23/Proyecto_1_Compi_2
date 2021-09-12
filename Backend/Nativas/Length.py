@@ -11,7 +11,6 @@ class Length(Funcion):
         simbolo = table.getTabla("length##Param1")
         if simbolo == None: 
             return Excepcion("Semantico", "Sin parametro en length", self.fila, self.colum)
-        print(simbolo.getTipo())
         if simbolo.getTipo() != TIPO.STRING and simbolo.getTipo() != TIPO.ARRAY:
             return Excepcion("Semantico", "length recibe solo expresiones de tipo string o array", self.fila, self.colum)
         

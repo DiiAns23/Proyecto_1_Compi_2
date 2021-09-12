@@ -111,3 +111,6 @@ class Relacional(Instruccion):
         elif tipo == TIPO.BOOL:
             return bool(val)
         return str(val)
+
+    def getTipo(self):
+        return self.tipo
