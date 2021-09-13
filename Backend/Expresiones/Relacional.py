@@ -1,3 +1,4 @@
+from re import S
 from TablaSimbolos.Simbolo import Simbolo
 from TablaSimbolos.Excepcion import Excepcion
 from TablaSimbolos.Tipo import OperadorRelacional, TIPO
@@ -110,6 +111,9 @@ class Relacional(Instruccion):
             return float(val)
         elif tipo == TIPO.BOOL:
             return bool(val)
+        elif tipo == TIPO.ARRAY:
+            print(val)
+            return int(val)
         return str(val)
 
     def getTipo(self):

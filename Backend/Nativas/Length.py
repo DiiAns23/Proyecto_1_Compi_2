@@ -5,6 +5,7 @@ from Instrucciones.Funcion import Funcion
 class Length(Funcion):
 
     def __init__(self, ide, params, inst, fila, columna):
+        self.tipo = TIPO.ENTERO
         super().__init__(ide, params, inst, fila, columna)
     
     def interpretar(self, tree, table):
@@ -15,4 +16,4 @@ class Length(Funcion):
             return Excepcion("Semantico", "length recibe solo expresiones de tipo string o array", self.fila, self.colum)
         
         self.tipo = TIPO.ENTERO
-        return len(simbolo.getValor())
+        return int(len(simbolo.getValor()))

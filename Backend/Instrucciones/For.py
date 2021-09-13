@@ -61,7 +61,7 @@ class For(Instruccion):
             if self.rango[0].tipo == TIPO.ENTERO and self.rango[1].tipo == TIPO.ENTERO:
                 for x in range(init, fin + 1):
                     entorno = Tabla_Simbolos(table) 
-                    simbolo = Simbolo(self.inicio.id,TIPO.ENTERO, self.fila, self.colum, x)
+                    simbolo = Simbolo(self.inicio.id,TIPO.ENTERO, self.fila, self.colum, int(x))
                     result = entorno.setTabla(simbolo)
                     for instruccion in self.instrucciones:
                         result = instruccion.interpretar(tree, entorno)
@@ -77,7 +77,7 @@ class For(Instruccion):
     def Ciclo(self,tree, table, inicio, values):
         for x in values:
             entorno = Tabla_Simbolos(table)
-            simbolo = Simbolo(self.inicio.id, TIPO.ARRAY, self.fila, self.colum, x)
+            simbolo = Simbolo(self.inicio.id, TIPO.ENTERO, self.fila, self.colum, x)
             result = entorno.setTabla(simbolo)
             for instruccion in self.instrucciones:
                 result = instruccion.interpretar(tree, entorno)

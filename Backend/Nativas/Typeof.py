@@ -25,3 +25,5 @@ class Typeof(Funcion):
             return "Array"
         if self.tipo == TIPO.NULO:
             return "Null"
+        if self.tipo == TIPO.BOOL:
+            return "Bool"

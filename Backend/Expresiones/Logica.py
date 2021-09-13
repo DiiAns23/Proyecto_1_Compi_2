@@ -40,6 +40,8 @@ class Logica(Instruccion):
             return float(val)
         elif tipo == TIPO.BOOL:
             return bool(val)
+        elif tipo == TIPO.ARRAY:
+            return int(val)
         return str(val)
     
     def getTipo(self):

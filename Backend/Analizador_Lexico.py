@@ -16,6 +16,7 @@ reserved = {
     'end'       :   'REND',
     'if'        :   'RIF',
     'else'      :   'RELSE',
+    'elseif'    :   'RELSEIF',
     'while'     :   'RWHILE',
     'for'       :   'RFOR',
     'in'        :   'RIN',
@@ -26,7 +27,9 @@ reserved = {
     'continue'  :   'RCONTINUE',
     'local'     :   'RLOCAL',
     'global'    :   'RGLOBAL',
-    'List'      :   'RLIST'
+    'List'      :   'RLIST',
+    'struct'    :   'RSTRUCT',
+    'mutable'   :   'RMUTABLE'
 }
 
 tokens  = [
@@ -143,9 +146,9 @@ def t_Com_Simple(t):
 
 #Comentario Multilinea
 def t_Com_Multiple(t):
-    r'\#\*(.|\n)*?\*\#'
-    t.lexer.lineno += 1
-
+    r'\#=(.|\n)*?=\#'
+    t.lexer.lineno += t.value.count('\n')
+    
 #Nueva Linea
 def t_newline(t):
     r'\n+'
