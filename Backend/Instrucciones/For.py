@@ -27,27 +27,44 @@ class For(Instruccion):
                 if isinstance(value, Excepcion): return value
                 if self.rango[0].getTipo() == TIPO.STRING:
                     values = list(value)
-                    result = self.Ciclo(tree, table, inicio, values)
-                    return result
+                    for x in values:
+                        entorno = Tabla_Simbolos(table)
+                        simbolo = Simbolo(self.inicio.id, TIPO.STRING, self.fila, self.colum, x)
+                        result = entorno.setTabla(simbolo)
+                        for instruccion in self.instrucciones:
+                            result = instruccion.interpretar(tree, entorno)
+                            if isinstance(result, Excepcion):
+                                tree.getExcepciones().append(result)
+                                tree.updateConsola(result.toString())
+                            if isinstance(result, Return): return result
+                            if isinstance(result, Break): return None
+                            if isinstance(result, Continue): break
+                    return None
                 elif self.rango[0].getTipo() == TIPO.ARRAY:
                     rango = self.rango[0].interpretar(tree, table)
                     if isinstance(rango, Excepcion): return rango
                     values = []
+                    tipos = []
                     for x in rango:
                         val = x.getValor()
+                        tip = x.getTipo()
                         if isinstance(val, Excepcion): return val
                         values.append(val)
-                    result = self.Ciclo(tree, table, inicio, values)
+                        tipos.append(tip)
+                    result = self.Ciclo(tree, table, tipos, values)
                     return result
                 return Excepcion("Semantico", "No se ha definido un rango en el ciclo for", self.fila, self.colum)
             else:
                 self.rango = self.rango[0]
                 values = []
+                tipos = []
+                print("Verificacion")
                 for value in self.rango:
                     val = value.interpretar(tree, table)
                     if isinstance(val, Excepcion): return val
+                    tipos.append(value.tipo)
                     values.append(val)
-                result = self.Ciclo(tree, table, inicio, values)
+                result = self.Ciclo(tree, table, tipos, values)
                 return result
             
         else:
@@ -61,7 +78,7 @@ class For(Instruccion):
             if self.rango[0].tipo == TIPO.ENTERO and self.rango[1].tipo == TIPO.ENTERO:
                 for x in range(init, fin + 1):
                     entorno = Tabla_Simbolos(table) 
-                    simbolo = Simbolo(self.inicio.id,TIPO.ENTERO, self.fila, self.colum, int(x))
+                    simbolo = Simbolo(self.inicio.id, TIPO.ENTERO, self.fila, self.colum, int(x))
                     result = entorno.setTabla(simbolo)
                     for instruccion in self.instrucciones:
                         result = instruccion.interpretar(tree, entorno)
@@ -74,10 +91,11 @@ class For(Instruccion):
             else:
                 return Excepcion("Semantico", "Error en el rango del ciclo for", self.fila, self.colum)
                     
-    def Ciclo(self,tree, table, inicio, values):
+    def Ciclo(self,tree, table, tipo, values):
+        n = 0
         for x in values:
             entorno = Tabla_Simbolos(table)
-            simbolo = Simbolo(self.inicio.id, TIPO.ENTERO, self.fila, self.colum, x)
+            simbolo = Simbolo(self.inicio.id, tipo[n], self.fila, self.colum, x)
             result = entorno.setTabla(simbolo)
             for instruccion in self.instrucciones:
                 result = instruccion.interpretar(tree, entorno)
@@ -87,4 +105,5 @@ class For(Instruccion):
                 if isinstance(result, Return): return result
                 if isinstance(result, Break): return None
                 if isinstance(result, Continue): break
+            n += 1
         return None

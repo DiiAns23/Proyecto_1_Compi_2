@@ -38,7 +38,6 @@ from Analizador_Lexico import find_column
 from TablaSimbolos.Tabla_Simbolos import Tabla_Simbolos
 
 
-
 # Asociación de operadores y precedencia
 precedence = (
     ('left', 'OR'),

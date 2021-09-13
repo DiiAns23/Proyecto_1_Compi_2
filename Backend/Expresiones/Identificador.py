@@ -1,3 +1,5 @@
+from TablaSimbolos.Excepcion import Excepcion
+from typing import List
 from Abstrac.Instruccion import Instruccion
 from TablaSimbolos.Tipo import TIPO
 
@@ -11,9 +13,10 @@ class Identificador(Instruccion):
     def interpretar(self, tree, table):
         simbolo = table.getTabla(self.ide)
         if simbolo == None:
-            error = "Semantico - Variable o valor no encontrados " + "[" + str(self.fila) + ", " + str(self.colum) + "]"
-            return error
+            return Excepcion("Semantico", "Variable no encontrada", self.fila, self.colum)
         self.tipo = simbolo.getTipo()
+        # if isinstance(simbolo.getValor(), List):
+        #     print("Valor retornado: ", str(simbolo.getValor()[0].getTipo()))
         return simbolo.getValor()
 
     def getTipo(self):

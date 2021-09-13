@@ -18,8 +18,7 @@ class Array(Instruccion):
         if self.ide:
             simbolo = table.getTabla(self.ide)
             if simbolo == None:
-                error = "Semantico - Variable o valor no encontrados " + "[" + str(self.fila) + ", " + str(self.colum) + "]"
-                return error
+                return Excepcion("Semantico", "Variable no encontrada", self.fila, self.colum)
             if self.rango == None:
                 if self.indices:
                     valores = simbolo.getValor()
@@ -29,11 +28,10 @@ class Array(Instruccion):
                         if int(index) > 0:
                             indices.append(index)
                         else:
-                            print("Esta entrando aqui :0")
-                            error = "Semantico - Indice fuera de rango " + "[" + str(self.fila) + ", " + str(self.colum) + "]"
-                            return error
+                            return Excepcion("Semantico", "Indice fuera de rango", self.fila, self.colum)
                     valores = self.getValores(valores, indices)
                     return valores
+                    # return None
                 else:
                     values = simbolo.getValor()
                     valores = []
@@ -47,14 +45,13 @@ class Array(Instruccion):
                 if isinstance(init, Excepcion): return init
                 fin = self.rango[1].interpretar(tree, table)
                 if isinstance(fin, Excepcion): return fin
-
                 if self.rango[0].tipo != TIPO.ENTERO or self.rango[1].tipo != TIPO.ENTERO:
                     return Excepcion("Semantico", "Solo se acepta tipo Int64", self.fila, self.colum)
                 values = simbolo.getValor()
                 valores = []
                 for i in range(init, fin + 1):
                     try:
-                        if i > 0:
+                        if int(i) > 0:
                             simbolo = Simbolo("", values[i-1].getTipo(), self.fila, self.colum, values[i-1].getValor())
                             valores.append(simbolo)
                         else:
@@ -83,10 +80,10 @@ class Array(Instruccion):
         actual = anterior
         for indice in indices:
             try:
-                self.tipo = actual[indice-1].getTipo()
-                actual = actual[indice-1].getValor()
+                self.tipo = actual[int(indice)-1].getTipo()
+                actual = actual[int(indice)-1].getValor()
             except:
-                actual = "Semantico - Indice fuera de rango " + "[" + str(self.fila) + ", " + str(self.colum) + "]"
+                return Excepcion("Semantico", "Indices fuera de rango", self.fila, self.colum)
         return actual 
         
     def copyValues(self, anterior):

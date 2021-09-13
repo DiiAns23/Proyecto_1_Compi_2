@@ -47,7 +47,7 @@ class Declaracion(Instruccion):
                 for valores in self.valor:
                     value = valores.interpretar(tree, table)
                     if isinstance(value, Excepcion): return value
-                    simbolo = Simbolo("", valores.tipo, valores.fila, valores.colum, value)
+                    simbolo = Simbolo("", valores.getTipo(), valores.fila, valores.colum, value)
                     lista.append(simbolo)
                 array = Simbolo(self.id, TIPO.ARRAY, self.fila, self.colum, lista)
                 result = table.setTabla(array)
