@@ -1,4 +1,3 @@
-from re import escape
 from TablaSimbolos.Simbolo import Simbolo
 from TablaSimbolos.Excepcion import Excepcion
 from typing import List
@@ -27,9 +26,10 @@ class Array(Instruccion):
                     indices = []
                     for indice in self.indices:
                         index = indice.interpretar(tree, table)
-                        if index > 0:
+                        if int(index) > 0:
                             indices.append(index)
                         else:
+                            print("Esta entrando aqui :0")
                             error = "Semantico - Indice fuera de rango " + "[" + str(self.fila) + ", " + str(self.colum) + "]"
                             return error
                     valores = self.getValores(valores, indices)

@@ -1,3 +1,7 @@
+from Nativas.String import Stringg
+from Nativas.Trunc import Trunc
+from Nativas.Pop import Pop
+from Nativas.Push import Push
 from Expresiones.Array import Array
 from Nativas.Float import Float
 from Nativas.Typeof import Typeof
@@ -76,10 +80,13 @@ def p_instrucciones_2(t):
 def p_instrucciones_evaluar(t):
     '''instruccion : imprimir PTCOMA
                     | declaracion_instr PTCOMA
+                    | declaracion_local PTCOMA
+                    | declaracion_global PTCOMA
                     | declaracion_function PTCOMA
+                    | inmutable_struct PTCOMA
                     | llamada_function PTCOMA
                     | llamada_function
-                    | condicional_if REND PTCOMA
+                    | condicional_ifs REND PTCOMA
                     | loop_while PTCOMA
                     | loop_for PTCOMA
                     | r_return PTCOMA
@@ -90,8 +97,8 @@ def p_instrucciones_evaluar(t):
     t[0] = t[1]
 
 def p_imprimir(t):
-    '''imprimir : RPRINT PARI expresion PARD
-                | RPRINT2 PARI expresion PARD'''
+    '''imprimir : RPRINT PARI parametros_ll PARD
+                | RPRINT2 PARI parametros_ll PARD'''
     if t[1] == "print":
         t[0] = Imprimir("print",t[3], t.lineno(1), find_column(input, t.slice[1]))
     else:
@@ -110,19 +117,19 @@ def p_declaracion_for(t):
     t[0] = Declaracion(t[1], t.lineno(1), find_column(input, t.slice[1]),None,None)
 
 def p_declaracion_local(t):
-    '''declaracion_instr : RLOCAL ID'''
+    '''declaracion_local : RLOCAL ID'''
     t[0] = Declaracion(t[2], t.lineno(1), find_column(input, t.slice[1]),None,None)
 
 def p_declaracion_local1(t):
-    '''declaracion_instr : RLOCAL ID IGUAL expresion'''
+    '''declaracion_local : RLOCAL ID IGUAL expresion'''
     t[0] = Declaracion(t[2], t.lineno(1), find_column(input, t.slice[1]),None,t[4])
 
 def p_declaracion_global(t):
-    'declaracion_instr : RGLOBAL ID'
+    'declaracion_global : RGLOBAL ID'
     t[0] = Declaracion(t[2], t.lineno(1), find_column(input, t.slice[1]),None,None)
 
 def p_declaracion_global1(t):
-    '''declaracion_instr : RGLOBAL ID IGUAL expresion'''
+    '''declaracion_global : RGLOBAL ID IGUAL expresion'''
     t[0] = Declaracion(t[2], t.lineno(1), find_column(input, t.slice[1]),None,t[4])
 
 def p_declaracion_array(t):
@@ -130,11 +137,24 @@ def p_declaracion_array(t):
     t[0] = Declaracion(t[1], t.lineno(1), find_column(input, t.slice[1]), TIPO.ARRAY, t[4])
 
 def p_declaracion_array_2(t):
-    '''declaracion_instr : ID IGUAL'''
+    'declaracion_instr : ID IGUAL CORI parametros_ll CORD DPUNTOS DPUNTOS tipo'
+    t[0] = Declaracion(t[1], t.lineno(1), find_column(input, t.slice[1]), t[8], t[4])
 
 def p_asignacion_array(t):
     'asignacion_array : ID arrays_1 IGUAL expresion'
     t[0] = Asignacion(t[1], t[2], t.lineno(1), find_column(input, t.slice[1]), t[4])
+
+def p_declaracion_struct(t):
+    'declaracion_struct  :   ID'
+    t[0] = Declaracion(t[1], t.lineno(1), find_column(input, t.slice[1]),None,None)
+
+def p_declaracion_struct2(t):
+    'declaracion_struct  :   ID DPUNTOS DPUNTOS tipo'
+    t[0] = Declaracion(t[1], t.lineno(1), find_column(input, t.slice[1]),t[4],None)
+
+def p_inmutable_struct(t):
+    'inmutable_struct : RSTRUCT ID params_structs REND'
+    t[0] = Declaracion(t[1], t.lineno(1), find_column(input, t.slice[1]), TIPO.STRUCT, t[3])
 
 def p_llamada_function_1(t):
     'llamada_function : ID PARI parametros_ll PARD'
@@ -152,17 +172,21 @@ def p_declaracion_function_2(t):
     '''declaracion_function : RFUNCTION ID PARI PARD instrucciones REND'''
     t[0] = Funcion(t[2], [], t[5], t.lineno(2), find_column(input, t.slice[1]))
 
+def p_condicional_if_0(t):
+    'condicional_ifs : RIF condicional_if'
+    t[0] = t[2]
+
 def p_condicional_if_1(t):
-    '''condicional_if : RIF expresion instrucciones'''
-    t[0] = If(t[2],t[3],None, None, t.lineno(1), find_column(input, t.slice[1]))
+    '''condicional_if : expresion instrucciones'''
+    t[0] = If(t[1],t[2],None, None, -1,-1)
 
 def p_condicional_if_2(t):
-    '''condicional_if : RIF expresion instrucciones RELSE instrucciones'''
-    t[0] = If(t[2],t[3],t[5], None, t.lineno(1), find_column(input, t.slice[1]))
+    '''condicional_if : expresion instrucciones RELSE instrucciones'''
+    t[0] = If(t[1],t[2],t[4], None, -1, -1)
 
 def p_condicional_if_3(t):
-    '''condicional_if : RIF expresion instrucciones RELSE condicional_if'''
-    t[0] = If(t[2],t[3],None, t[5], t.lineno(1), find_column(input, t.slice[1]))
+    '''condicional_if : expresion instrucciones RELSEIF condicional_if'''
+    t[0] = If(t[1],t[2],None, t[4], -1, -1)
 
 def p_loop_while_1(t):
     '''loop_while : RWHILE expresion instrucciones REND'''
@@ -244,6 +268,19 @@ def p_params8(t):
 
 def p_params9(t):
     'arrays_2 : expresion'
+    t[0] = t[1]
+
+def p_params10(t):
+    'params_structs : params_structs param_structs'
+    t[1].append(t[2])
+    t[0] = t[1]
+
+def p_params11(t):
+    'params_structs : param_structs'
+    t[0] = [t[1]]
+
+def p_params12(t):
+    'param_structs : declaracion_struct PTCOMA'
     t[0] = t[1]
 
 def p_expresion_binaria(t):
@@ -359,7 +396,8 @@ def p_tipo(t):
             | RFLOAT
             | RBOOL
             | RCHAR
-            | RSTRING'''
+            | RSTRING
+            | RLIST'''
     if t[1] ==  "Int64":
         t[0] = TIPO.ENTERO
     elif t[1] == "Float64":
@@ -370,6 +408,8 @@ def p_tipo(t):
         t[0] = TIPO.CHAR
     elif t[1] == "String":
         t[0] = TIPO.STRING
+    elif t[1] == "List":
+        t[0] = TIPO.ARRAY
 
 def agregarNativas(ast):
     nombre = "uppercase"
@@ -432,6 +472,27 @@ def agregarNativas(ast):
     params = [{'tipo':TIPO.ENTERO, 'ide':'float##Param1'}]
     floats = Float(nombre, params, inst, -1, -1)
     ast.setFunciones(floats)
+
+    nombre = "trunc"
+    params = [{'tipo':TIPO.FLOAT, 'ide':'trunc##Param1'}]
+    trunc = Trunc(nombre, params, inst, -1, -1)
+    ast.setFunciones(trunc)
+
+    nombre = "string"
+    params = [{'tipo':'NoTipo', 'ide':'string##Param1'}]
+    string = Stringg(nombre, params, inst, -1, -1)
+    ast.setFunciones(string)
+
+    nombre = "push"
+    params = [{'tipo':TIPO.ARRAY, 'ide':'push##Param1'}, {'tipo':'NoTipo', 'ide':'push##Param2'}]
+    push = Push(nombre, params, inst, -1,-1)
+    ast.setFunciones(push)
+
+    nombre = "pop"
+    params = [{'tipo':TIPO.ARRAY, 'ide':'pop##Param1'}]
+    pop = Pop(nombre, params, inst, -1,-1)
+    ast.setFunciones(pop)
+
     
 def p_error(t):
     print("Error sintáctico en '%s'" % t.value)

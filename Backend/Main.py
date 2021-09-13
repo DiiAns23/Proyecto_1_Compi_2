@@ -13,14 +13,11 @@ from Analizador_Lexico import errores, tokens, lexer
 from Instrucciones.Funcion import Funcion
 from Analizador_Sintactico import agregarNativas as Nativas
 from flask_cors import CORS
+import sys
+sys.setrecursionlimit(1000000)
 
-app = Flask(__name__, template_folder="Templates")
+app = Flask(__name__)
 CORS(app)
-
-@app.route('/codigo', methods=["PUT"])
-def analize():
-    if request.method == "PUT":
-        print("Entro aqui :3")
 
 @app.route('/prueba', methods = ["POST", "GET"])
 def prueba():

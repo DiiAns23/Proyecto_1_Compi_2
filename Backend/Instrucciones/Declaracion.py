@@ -1,10 +1,8 @@
-from Expresiones.Identificador import Identificador
-from Expresiones.Array import Array
-from Expresiones.Primitivos import Primitivos
 from TablaSimbolos.Tipo import TIPO
 from TablaSimbolos.Excepcion import Excepcion
 from Abstrac.Instruccion import Instruccion
 from TablaSimbolos.Simbolo import Simbolo
+from TablaSimbolos.Tabla_Simbolos import Tabla_Simbolos
 
 class Declaracion(Instruccion):
     def __init__(self, ide, fila, columna, tipo = None,valor = None):
@@ -15,7 +13,7 @@ class Declaracion(Instruccion):
         self.colum = columna
     
     def interpretar(self, tree, table):
-        if self.tipo != TIPO.ARRAY:
+        if self.tipo != TIPO.ARRAY and self.tipo != TIPO.STRUCT:
             if self.valor != None:
                 if self.tipo!=None:
                     value = self.valor.interpretar(tree, table)
@@ -43,7 +41,7 @@ class Declaracion(Instruccion):
                 result = table.setTabla(simbolo)
                 if isinstance(result, Excepcion): return result
                 return None
-        else:
+        elif self.tipo == TIPO.ARRAY:
             if self.valor != None:
                 lista = []
                 for valores in self.valor:
@@ -57,3 +55,11 @@ class Declaracion(Instruccion):
                     table.updateTabla(array)
                 return None
             
+        elif self.tipo == TIPO.STRUCT:
+            if self.valor:
+                dict = {}
+                for valores in self.valor:
+                    simbolo = Simbolo("", valores.tipo, self.fila, self.colum, valores.valor )
+                    dict[str(valores.id)] = simbolo
+                print("Diccionario", str(dict))
+                print("Nombre: ", dict['nombre'].getValor())

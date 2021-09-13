@@ -11,14 +11,17 @@ class Imprimir(Instruccion):
         self.colum = colum
     
     def interpretar(self, tree, tabla):
-        value = self.exp.interpretar(tree, tabla)
-        if isinstance(value, Excepcion):
-            return value
-        if isinstance(value, List):
-            value = self.getValores(value)
-            if len(value) == 1:
-                value = value[0]
-
+        value = ""
+        for x in self.exp:
+            aux = x.interpretar(tree, tabla)
+            if isinstance(aux, Excepcion):
+                return aux
+            if isinstance(aux, List):
+                aux = self.getValores(aux)
+                if len(aux) == 1:
+                    aux = aux[0]
+            value = value + str(aux)
+                    
         if self.inst == "println":
             tree.updateConsola(value)
         else:
