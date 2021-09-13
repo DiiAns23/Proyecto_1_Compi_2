@@ -13,11 +13,13 @@ from Analizador_Lexico import errores, tokens, lexer
 from Instrucciones.Funcion import Funcion
 from Analizador_Sintactico import agregarNativas as Nativas
 from flask_cors import CORS
-import sys
-sys.setrecursionlimit(1000000)
 
 app = Flask(__name__)
 CORS(app)
+
+@app.route('/saludo', methods = ["GET"])
+def saludo():
+    return "Hola mundo"
 
 @app.route('/prueba', methods = ["POST", "GET"])
 def prueba():
@@ -66,4 +68,4 @@ def salida():
     return json.dumps(consola)
 
 if __name__ == '__main__':
-    app.run(debug = True, port=5200)
+    app.run(debug = False, port=5200)
