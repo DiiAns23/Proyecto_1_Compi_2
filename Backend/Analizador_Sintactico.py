@@ -1,3 +1,6 @@
+from Instrucciones.Asignacion_Struct import Asignacion_Struct
+from Expresiones.Struct import Struct
+from Instrucciones.Declaracion_Struct import Declaracion_Struct
 from Nativas.String import Stringg
 from Nativas.Trunc import Trunc
 from Nativas.Pop import Pop
@@ -83,6 +86,8 @@ def p_instrucciones_evaluar(t):
                     | declaracion_global PTCOMA
                     | declaracion_function PTCOMA
                     | inmutable_struct PTCOMA
+                    | mutable_struct PTCOMA
+                    | asignacion_struct PTCOMA
                     | llamada_function PTCOMA
                     | llamada_function
                     | condicional_ifs REND PTCOMA
@@ -143,17 +148,25 @@ def p_asignacion_array(t):
     'asignacion_array : ID arrays_1 IGUAL expresion'
     t[0] = Asignacion(t[1], t[2], t.lineno(1), find_column(input, t.slice[1]), t[4])
 
-def p_declaracion_struct(t):
-    'declaracion_struct  :   ID'
-    t[0] = Declaracion(t[1], t.lineno(1), find_column(input, t.slice[1]),None,None)
-
-def p_declaracion_struct2(t):
-    'declaracion_struct  :   ID DPUNTOS DPUNTOS tipo'
-    t[0] = Declaracion(t[1], t.lineno(1), find_column(input, t.slice[1]),t[4],None)
-
 def p_inmutable_struct(t):
     'inmutable_struct : RSTRUCT ID params_structs REND'
-    t[0] = Declaracion(t[1], t.lineno(1), find_column(input, t.slice[1]), TIPO.STRUCT, t[3])
+    t[0] = Declaracion_Struct(t[2], t.lineno(1), find_column(input, t.slice[1]),False,t[3])
+
+def p_mutable_struct(t):
+    'mutable_struct : RMUTABLE RSTRUCT ID params_structs REND'
+    t[0] = Declaracion_Struct(t[3], t.lineno(1), find_column(input, t.slice[1]),True,t[4])
+
+def p_asignacion_struct(t):
+    'asignacion_struct : ID PUNTO asignacion_params IGUAL expresion'
+    t[0] = Asignacion_Struct(t[1], t.lineno(1), find_column(input, t.slice[1]), t[3], t[5])
+
+def p_declaracion_aux1(t):
+    'declaracion_aux  :   ID PTCOMA'
+    t[0] = Declaracion(t[1], t.lineno(1), find_column(input, t.slice[1]),None,None)
+    
+def p_declaracion_aux2(t):
+    'declaracion_aux  :   ID DPUNTOS DPUNTOS tipo PTCOMA'
+    t[0] = Declaracion(t[1], t.lineno(1), find_column(input, t.slice[1]),t[4],None)
 
 def p_llamada_function_1(t):
     'llamada_function : ID PARI parametros_ll PARD'
@@ -279,7 +292,20 @@ def p_params11(t):
     t[0] = [t[1]]
 
 def p_params12(t):
-    'param_structs : declaracion_struct PTCOMA'
+    'param_structs : declaracion_aux'
+    t[0] = t[1]
+
+def p_params13(t):
+    'asignacion_params : asignacion_params PUNTO asignacion_param'
+    t[1].append(t[3])
+    t[0] = t[1]
+
+def p_params14(t):
+    'asignacion_params : asignacion_param'
+    t[0] = [t[1]]
+
+def p_params15(t):
+    'asignacion_param  : ID'
     t[0] = t[1]
 
 def p_expresion_binaria(t):

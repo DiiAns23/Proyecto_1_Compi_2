@@ -35,6 +35,7 @@ reserved = {
 tokens  = [
     'COMA',
     'PTCOMA',
+    'PUNTO',
     'DPUNTOS',
     'PARI',
     'PARD',
@@ -67,6 +68,7 @@ tokens  = [
 t_COMA          = r','
 t_PTCOMA        = r';'
 t_DPUNTOS       = r':'
+t_PUNTO         = r'.'
 t_PARI          = r'\('
 t_PARD          = r'\)'
 t_MAS           = r'\+'

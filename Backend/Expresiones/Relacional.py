@@ -85,6 +85,8 @@ class Relacional(Instruccion):
                 return self.getValor(self.opi.tipo, izq) == self.getValor(self.opd.tipo, der)
             if self.opi.tipo == TIPO.BOOL and self.opi.tipo == TIPO.BOOL:
                 return izq == der
+            if self.opi.tipo == TIPO.NULO and self.opi.tipo == TIPO.NULO:
+                return self.getValor(self.opi.tipo, izq) == self.getValor(self.opd.tipo, der)
             return Excepcion("Semantico", "Error en la operacion ==", self.fila, self.colum)
 
         elif self.op == OperadorRelacional.DIFERENTE:
