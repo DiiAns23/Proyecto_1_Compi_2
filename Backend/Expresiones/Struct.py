@@ -13,5 +13,25 @@ class Struct(Instruccion):
         self.tipo = TIPO.NULO
     
     def interpretar(self, tree, table):
-        print("Si entra hasta aqui correctamente :3")
+        struct = table.getTabla(self.ide)
+        if struct == None:
+            return Excepcion("Semantico", "struct no encontrado", self.fila, self.colum)
+        claves = []
+        for clave in self.parametros:
+            claves.append(clave)
+        valor = self.getValores(struct.getValor(), claves)
+
+        return valor
+        
+    def getValores(self, anterior, claves):
+        actual = anterior
+        for clave in claves:
+            try:
+                self.tipo = actual[str(clave)].getTipo()
+                actual = actual[str(clave)].getValor()
+            except:
+                return Excepcion("Semantico", "Valores no encontrados", self.fila, self.colum)
+        return actual
     
+    def getTipo(self):
+        return self.tipo

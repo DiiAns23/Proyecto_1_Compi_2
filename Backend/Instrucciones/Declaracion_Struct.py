@@ -18,10 +18,10 @@ class Declaracion_Struct(Instruccion):
             dict = {}
             for variable in self.variables:
                 if variable.tipo:
-                    simbolo = Simbolo("", variable.tipo, self.fila, self.colum, "nothing" )
+                    simbolo = Simbolo("", variable.tipo, self.fila, self.colum, "nothing")
                 else:
                     simbolo = Simbolo("", TIPO.NULO, self.fila, self.colum, "nothing")
                 dict[str(variable.id)] = simbolo
-            simbolo = Simbolo(str(self.id), TIPO.STRUCT, self.fila, self.colum, dict)
+            simbolo = Simbolo(str(self.id), TIPO.STRUCT, self.fila, self.colum, dict, self.mutable)
             table.setTabla(simbolo)
         return None

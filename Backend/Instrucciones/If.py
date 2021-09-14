@@ -35,7 +35,7 @@ class If(Instruccion):
                 if self.bloqueElse != None:
                     entorno = Tabla_Simbolos(table)
                     for instruccion in self.bloqueElse:
-                        result = instruccion.interpretar(tree, table)
+                        result = instruccion.interpretar(tree, entorno)
                         if isinstance(result, Excepcion):
                             tree.getExcepciones().append(result)
                             tree.updateConsola(result.toString())

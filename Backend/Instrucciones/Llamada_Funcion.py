@@ -17,8 +17,7 @@ class Llamada_Funcion(Instruccion):
         bandera = True
         result = tree.getFuncion(self.ide)
         if result == None:
-            print("Ide: ", str(self.ide))
-            struct = table.getTabla(self.ide)
+            struct = table.getTabla(str(self.ide))
             if struct == None:
                 return Excepcion("Semantico", "Funcion o variable no encontrada "+ str(self.ide), self.fila, self.colum)
             else:
@@ -76,4 +75,5 @@ class Llamada_Funcion(Instruccion):
                 tipos.pop(0)
             if len(list) != 0:
                 return Excepcion("Semantico", "Demasiados parametros para este struct", self.fila, self.colum)
-            return dictaux
+            aux = {'datos': dictaux, 'mutable': struct.mutable}
+            return aux

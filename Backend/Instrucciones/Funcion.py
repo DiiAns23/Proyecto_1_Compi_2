@@ -19,12 +19,13 @@ class Funcion(Instruccion):
     def interpretar(self, tree, table):
         entorno = Tabla_Simbolos(table)
         for ins in self.inst:
+            value = ""
             if isinstance(ins, Asignacion) or isinstance(ins, Declaracion):
                 value = ins.interpretar(tree, table)
             else:
                 value = ins.interpretar(tree, entorno)
             if isinstance(value, Excepcion): 
-                tree.getExepciones().append(value)
+                tree.getExcepciones().append(value)
                 tree.updateConsola(value.toString())
             if isinstance(value, Return):
                 self.tipo = value.tipo

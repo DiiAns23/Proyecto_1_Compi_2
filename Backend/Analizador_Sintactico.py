@@ -87,6 +87,7 @@ def p_instrucciones_evaluar(t):
                     | declaracion_function PTCOMA
                     | inmutable_struct PTCOMA
                     | mutable_struct PTCOMA
+                    | asignacion_struct PTCOMA
                     | llamada_function PTCOMA
                     | llamada_function
                     | condicional_ifs REND PTCOMA
@@ -155,9 +156,9 @@ def p_mutable_struct(t):
     'mutable_struct : RMUTABLE RSTRUCT ID params_structs REND'
     t[0] = Declaracion_Struct(t[3], t.lineno(1), find_column(input, t.slice[1]),True,t[4])
 
-# def p_asignacion_struct(t):
-#     'asignacion_struct : ID PUNTO asignacion_params IGUAL expresion'
-#     t[0] = Asignacion_Struct(t[1], t.lineno(1), find_column(input, t.slice[1]), t[3], t[5])
+def p_asignacion_struct(t):
+    'asignacion_struct : ID PUNTO asignacion_params IGUAL expresion'
+    t[0] = Asignacion_Struct(t[1], t.lineno(1), find_column(input, t.slice[1]), t[3], t[5])
 
 def p_declaracion_aux1(t):
     'declaracion_aux  :   ID PTCOMA'
@@ -375,6 +376,10 @@ def p_expresion_array(t):
     'expresion : ID arrays_1'
     t[0] = Array(t[1], t.lineno(1), find_column(input, t.slice[1]), TIPO.ARRAY, t[2])
 
+def p_expresion_struct(t):
+    'expresion : ID PUNTO asignacion_params'
+    t[0] = Struct(t[1], t.lineno(1), find_column(input, t.slice[1]), t[3])
+
 def p_expresion_array_2(t):
     'expresion : ID CORI DPUNTOS CORD'
     t[0] = Array(t[1], t.lineno(1), find_column(input, t.slice[1]), TIPO.ARRAY, None)
@@ -410,6 +415,10 @@ def p_expresion_true(t):
 def p_expresion_false(t):
     'expresion : RFALSE'
     t[0] = Primitivos(TIPO.BOOL, False, t.lineno(1), find_column(input, t.slice[1]))
+
+def p_expresion_nothing(t):
+    'expresion : RNOTHING'
+    t[0] = Primitivos(TIPO.NULO, "nothing", t.lineno(1), find_column(input, t.slice[1]))
 
 def p_expresion_llam(t):
     'expresion : llamada_function'

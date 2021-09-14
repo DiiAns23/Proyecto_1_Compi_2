@@ -29,7 +29,8 @@ reserved = {
     'global'    :   'RGLOBAL',
     'List'      :   'RLIST',
     'struct'    :   'RSTRUCT',
-    'mutable'   :   'RMUTABLE'
+    'mutable'   :   'RMUTABLE',
+    'nothing'   :   'RNOTHING'
 }
 
 tokens  = [
