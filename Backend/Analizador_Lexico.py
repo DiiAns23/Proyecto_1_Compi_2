@@ -35,6 +35,7 @@ reserved = {
 tokens  = [
     'COMA',
     'PTCOMA',
+    'PUNTO',
     'DPUNTOS',
     'PARI',
     'PARD',
@@ -67,24 +68,25 @@ tokens  = [
 t_COMA          = r','
 t_PTCOMA        = r';'
 t_DPUNTOS       = r':'
+t_PUNTO         = r'.'
 t_PARI          = r'\('
 t_PARD          = r'\)'
 t_MAS           = r'\+'
-t_MENOS         = r'-'
+t_MENOS         = r'\-'
 t_POR           = r'\*'
-t_DIV           = r'/'
+t_DIV           = r'\/'
 t_POT           = r'\^'
-t_MOD           = r'%'
-t_IGUALDAD      = r'=='
-t_IGUAL         = r'='
-t_DIFERENTE     = r'!='
-t_MAYOR         = r'>'
-t_MENOR         = r'<'
-t_MAYORI        = r'>='
-t_MENORI        = r'<='
+t_MOD           = r'\%'
+t_IGUALDAD      = r'\=='
+t_IGUAL         = r'\='
+t_DIFERENTE     = r'\!='
+t_MAYOR         = r'\>'
+t_MENOR         = r'\<'
+t_MAYORI        = r'\>='
+t_MENORI        = r'\<='
 t_OR            = r'\|\|'
 t_AND           = r'&&'
-t_NOT           = r'!'
+t_NOT           = r'\!'
 t_CORI          = r'\['
 t_CORD          = r'\]'
 

@@ -17,6 +17,7 @@ class Declaracion(Instruccion):
             if self.valor != None:
                 if self.tipo!=None:
                     value = self.valor.interpretar(tree, table)
+                    print("Si entra aqui :3")
                     if isinstance(value, Excepcion): return value
                     if str(self.tipo) == str(self.valor.tipo):
                         simbolo = Simbolo(str(self.id), self.valor.tipo, self.fila, self.colum, value)

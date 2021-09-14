@@ -15,7 +15,8 @@ export class AnalizadorService {
   });
 
   Analizer(codigo:String){
-    const url = 'https://calm-dusk-76175.herokuapp.com/prueba'
+    // const url = 'https://calm-dusk-76175.herokuapp.com/prueba'
+    const url = 'http://localhost:5200/prueba'
     return this.http.post<any>(
       url,
       {

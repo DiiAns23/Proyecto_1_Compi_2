@@ -27,3 +27,5 @@ class Typeof(Funcion):
             return "Null"
         if self.tipo == TIPO.BOOL:
             return "Bool"
+        if self.tipo == TIPO.STRUCT:
+            return "Struct"

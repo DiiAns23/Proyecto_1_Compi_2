@@ -7,7 +7,6 @@ from TablaSimbolos.Tabla_Simbolos import Tabla_Simbolos
 from Abstrac.Instruccion import Instruccion
 from TablaSimbolos.Excepcion import Excepcion
 
-
 class Funcion(Instruccion):
     def __init__(self, ide, params, inst, fila, columna):
         self.ide = ide

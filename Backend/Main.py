@@ -13,6 +13,8 @@ from Analizador_Lexico import errores, tokens, lexer
 from Instrucciones.Funcion import Funcion
 from Analizador_Sintactico import agregarNativas as Nativas
 from flask_cors import CORS
+import sys
+sys.setrecursionlimit(10000000)
 
 app = Flask(__name__)
 CORS(app)
@@ -68,4 +70,4 @@ def salida():
     return json.dumps(consola)
 
 if __name__ == '__main__':
-    app.run(debug = False, port=5200)
+    app.run(debug = True, port=5200)
