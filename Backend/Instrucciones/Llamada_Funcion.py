@@ -18,7 +18,7 @@ class Llamada_Funcion(Instruccion):
         result = tree.getFuncion(self.ide)
         if result == None:
             print("Ide: ", str(self.ide))
-            struct = table.getTabla(str(self.ide))
+            struct = table.getTabla(self.ide)
             if struct == None:
                 return Excepcion("Semantico", "Funcion o variable no encontrada "+ str(self.ide), self.fila, self.colum)
             else:

@@ -87,7 +87,6 @@ def p_instrucciones_evaluar(t):
                     | declaracion_function PTCOMA
                     | inmutable_struct PTCOMA
                     | mutable_struct PTCOMA
-                    | asignacion_struct PTCOMA
                     | llamada_function PTCOMA
                     | llamada_function
                     | condicional_ifs REND PTCOMA
@@ -156,9 +155,9 @@ def p_mutable_struct(t):
     'mutable_struct : RMUTABLE RSTRUCT ID params_structs REND'
     t[0] = Declaracion_Struct(t[3], t.lineno(1), find_column(input, t.slice[1]),True,t[4])
 
-def p_asignacion_struct(t):
-    'asignacion_struct : ID PUNTO asignacion_params IGUAL expresion'
-    t[0] = Asignacion_Struct(t[1], t.lineno(1), find_column(input, t.slice[1]), t[3], t[5])
+# def p_asignacion_struct(t):
+#     'asignacion_struct : ID PUNTO asignacion_params IGUAL expresion'
+#     t[0] = Asignacion_Struct(t[1], t.lineno(1), find_column(input, t.slice[1]), t[3], t[5])
 
 def p_declaracion_aux1(t):
     'declaracion_aux  :   ID PTCOMA'
