@@ -72,3 +72,34 @@ class Tabla_Simbolos:
             else:
                 tablaActual = tablaActual.anterior
         return Excepcion("Semantico", "Variable no encontrada", simbolo.getFila(), simbolo.getColum())
+    
+    def updateStruct(self, simbolo, claves):
+        tablaActual = self
+        while tablaActual != None:
+            if simbolo.id in tablaActual.tabla:
+                actual = tablaActual.tabla[simbolo.id].getValor()
+                x = 0
+                for clave in claves:
+                    if x == (len(claves)-1):
+                        try:
+                            actual = actual[str(clave)]
+                            if actual.getTipo() == TIPO.NULO:
+                                actual.setValor(simbolo.getValor())
+                                actual.setTipo(simbolo.getTipo())
+                            elif actual.getTipo() == simbolo.getTipo():
+                                actual.setValor(simbolo.getValor())
+                                actual.setTipo(simbolo.getTipo())
+                            else:
+                                return Excepcion("Semantico", "Los tipos no coinciden", simbolo.getFila(), simbolo.getColum())
+                        except:
+                            return Excepcion("Semantico", "No se han encontrado", simbolo.getFila(), simbolo.getColum())
+                    else:
+                        try:
+                            actual = actual[str(clave)].getValor()
+                        except:
+                            return Excepcion("Semantico", "No se han encontrado los valores", simbolo.getFila(), simbolo.getColum())
+                    x += 1
+                return None
+            else:
+                tablaActual = tablaActual.anterior
+        return Excepcion("Semantico", "Variable no encontrada", simbolo.getFila(), simbolo.getColum())

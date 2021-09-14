@@ -1,3 +1,4 @@
+from typing import Dict
 from TablaSimbolos.Tipo import TIPO
 from TablaSimbolos.Excepcion import Excepcion
 from Abstrac.Instruccion import Instruccion
@@ -17,7 +18,6 @@ class Declaracion(Instruccion):
             if self.valor != None:
                 if self.tipo!=None:
                     value = self.valor.interpretar(tree, table)
-                    print("Si entra aqui :3")
                     if isinstance(value, Excepcion): return value
                     if str(self.tipo) == str(self.valor.tipo):
                         simbolo = Simbolo(str(self.id), self.valor.tipo, self.fila, self.colum, value)
@@ -31,7 +31,14 @@ class Declaracion(Instruccion):
                 else:
                     value = self.valor.interpretar(tree, table)
                     if isinstance(value, Excepcion): return value
-                    simbolo = Simbolo(str(self.id), self.valor.tipo, self.fila, self.colum, value)
+                    simbolo = ""
+                    if isinstance(value, Dict):
+                        if 'datos' in value:
+                            simbolo = Simbolo(str(self.id), self.valor.tipo, self.fila, self.colum, value['datos'], value['mutable'])
+                        else:
+                            simbolo = Simbolo(str(self.id), self.valor.tipo, self.fila, self.colum, value, True)
+                    else:
+                        simbolo = Simbolo(str(self.id), self.valor.tipo, self.fila, self.colum, value)
                     result = table.setTabla(simbolo)
                     if result == "Asignacion":
                         table.updateTabla(simbolo)
@@ -48,19 +55,14 @@ class Declaracion(Instruccion):
                 for valores in self.valor:
                     value = valores.interpretar(tree, table)
                     if isinstance(value, Excepcion): return value
-                    simbolo = Simbolo("", valores.getTipo(), valores.fila, valores.colum, value)
+                    simbolo = ""
+                    if isinstance(value, Dict):
+                        simbolo = Simbolo(str(self.id), self.valor.tipo, self.fila, self.colum, value['datos'], value['mutable'])
+                    else:
+                        simbolo = Simbolo(str(self.id), valores.getTipo(), self.fila, self.colum, value)
                     lista.append(simbolo)
                 array = Simbolo(self.id, TIPO.ARRAY, self.fila, self.colum, lista)
                 result = table.setTabla(array)
                 if result == "Asignacion":
                     table.updateTabla(array)
                 return None
-            
-        elif self.tipo == TIPO.STRUCT:
-            if self.valor:
-                dict = {}
-                for valores in self.valor:
-                    simbolo = Simbolo("", valores.tipo, self.fila, self.colum, valores.valor )
-                    dict[str(valores.id)] = simbolo
-                print("Diccionario", str(dict))
-                print("Nombre: ", dict['nombre'].getValor())

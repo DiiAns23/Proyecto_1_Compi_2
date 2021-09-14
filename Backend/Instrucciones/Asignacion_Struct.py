@@ -14,5 +14,23 @@ class Asignacion_Struct(Instruccion):
         self.tipo = TIPO.NULO
     
     def interpretar(self, tree, table):
-        print("Si entra hasta aqui correctamente :3")
+        struct = table.getTabla(self.ide)
+        if struct == None:
+            return Excepcion("Semantico", "struct no encontrado", self.fila, self.fila)
+        if struct.mutable == True:
+            value = self.valor.interpretar(tree, table)
+            if isinstance(value, Excepcion): return value
+            
+            claves = []
+            for params in self.parametros:
+                claves.append(str(params))
+            simbolo = Simbolo(self.ide, self.valor.tipo, self.fila, self.colum, value)
+            result = table.updateStruct(simbolo, claves)
+            if isinstance(result, Excepcion): return result
+        else:
+            return Excepcion("Semantico", "No se pueden realizar cambios", self.fila, self.colum)
+        
+        
+
+
     

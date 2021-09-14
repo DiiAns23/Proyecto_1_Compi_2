@@ -1,13 +1,17 @@
 # from Abstrac.Instruccion import Instruccion
 
 class Simbolo():
-    def __init__(self, ide, tipo,fila, colum, valor):
+    def __init__(self, ide, tipo,fila, colum, valor, mutable = True):
         self.id = ide
         self.tipo = tipo
         self.valor = valor
         self.fila = fila
         self.colum = colum
-    
+        if mutable == False:
+            self.mutable = False
+        else:
+            self.mutable = mutable
+
     def getID(self):
         return self.id
     
