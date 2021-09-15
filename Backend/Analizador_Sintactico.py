@@ -108,6 +108,14 @@ def p_imprimir(t):
     else:
         t[0] = Imprimir("println",t[3], t.lineno(1), find_column(input, t.slice[1]))
 
+def p_imprimir2(t):
+    '''imprimir : RPRINT PARI PARD
+                | RPRINT2 PARI PARD'''
+    if t[1] == "print":
+        t[0] = Imprimir("print",None, t.lineno(1), find_column(input, t.slice[1]))
+    else:
+        t[0] = Imprimir("println",None, t.lineno(1), find_column(input, t.slice[1]))         
+
 def p_declaracion_tipo(t):
     '''declaracion_instr : ID IGUAL expresion DPUNTOS DPUNTOS tipo'''
     t[0] = Declaracion(t[1], t.lineno(2), find_column(input, t.slice[2]),t[6], t[3])
@@ -528,7 +536,7 @@ def agregarNativas(ast):
 
     
 def p_error(t):
-    print("Error sintáctico en '%s'" % t.value)
+    print(" Error sintáctico en'%s'" % t.value)
 
 input = ''
 
@@ -542,6 +550,7 @@ def parse(inp):
     parser = yacc.yacc()
     global input
     input = inp
+    lexer.lineno = 1
     return parser.parse(inp)
 
 # f = open("./entrada.txt", "r")

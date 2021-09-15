@@ -7,4 +7,7 @@ class Excepcion:
     
     def toString(self):
         return self.tipo + " - " + self.desc + " [" + str(self.fila) + ", " + str(self.column) + "]"
-        
+
+    def toString2(self):
+        a = str(self.tipo) +" ,"+str(self.desc) +" ," + str(self.fila)+" ," +str(self.column)
+        return a

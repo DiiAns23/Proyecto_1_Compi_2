@@ -39,6 +39,8 @@ export class AnalizadorComponent implements OnInit {
   console = ""
   consola = new FormControl('');
   arbol = "";
+  mostrarTabla = false;
+  getErrores: Array<any> = [];
 
   constructor(private monacoLoaderService: MonacoEditorLoaderService, private analizarService: AnalizadorService) {
     this.monacoLoaderService.isMonacoLoaded$
@@ -127,9 +129,33 @@ export class AnalizadorComponent implements OnInit {
   }
 
   analizar(){
-
     this.analizarService.Analizer(this.code).subscribe((res)=>{
       this.console  = res
     })
+  }
+
+  errores(){
+    // var getErrores: Array<String>
+    this.mostrarTabla = true;
+    this.analizarService.Errores().subscribe((res)=>{
+      this.getErrores = res['valores']
+      var aux: Array<any> = []
+      for (var x = 0; x < this.getErrores.length; x = x+1){
+        var efe = this.getErrores[x].split(',');
+        var a2 = {
+          'tipo': efe[0],
+          'desc': efe[1],
+          'fila': efe[2],
+          'colum': efe[3]
+        }
+        aux.push(a2)
+      }
+      this.getErrores = aux
+      console.log("Valores separados: ", this.getErrores)
+    })
+  }
+
+  ocultar(){
+    this.mostrarTabla = false;
   }
 }

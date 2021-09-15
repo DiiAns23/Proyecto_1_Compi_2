@@ -1,61 +1,133 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
-<nav class="navbar navbar-expand-lg navbar-light bg-light ">
-    <a class="navbar-brand" href="#">JOLC</a>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="#" align="center">JOLC</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarColor01">
         <ul class="navbar-nav mr-auto">
             <li class="nav-link active">
-                <button (click)="analizar()" type="button" class="btn btn-dark">Analizar</button>
+                <input (click)="analizar()" type="button" class="btn btn-dark" value="Analizar">
             </li>
             <li class="nav-link">
-                <button (click)="ast()" type="button" class="btn btn-dark">Visualizar AST</button>
+                <input (click)="ast()" type="button" class="btn btn-dark" value="Visualizar AST">
             </li>
             <li class="nav-link">
                 <input style="display:none;" accept=".ty" type="file" (change)="abrir($event)" #archivo>
-                <button (click)="archivo.click()" type="button" class="btn btn-dark">Abrir</button>
+                <input (click)="archivo.click()" type="button" class="btn btn-dark" value="Abrir">
             </li>
             <li class="nav-link">
-                <button (click)="guardar()" type="button" class="btn btn-dark">Guardar</button>
+                <input (click)="guardar()" type="button" class="btn btn-dark" value="Guardar">
             </li>
             <li class="nav-link">
-                <button (click)="limpiar()" type="button" class="btn btn-dark">Limpiar</button>
+                <input (click)="limpiar()" type="button" class="btn btn-dark" value="Limpiar">
             </li>
+            <span *ngIf="!mostrarTabla">
+            <li class="nav-link">
+                <input (click)="errores()" type="button" class="btn btn-dark" value="Errores">
+            </li>
+            </span>
+            <span *ngIf="mostrarTabla">
+                <li class="nav-link">
+                    <input (click)="ocultar()" type="button" class="btn btn-dark" value="Ocultar">
+                </li>
+            </span>
         </ul>
     </div>
 </nav>
-<div class="container-fluid">
-    <div class="row justify-content-center">
-        <div class="col-md-12">
-            <br>
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="card text-white bg-dark  mb-3">
-                        <div class="card-header">INPUT
-                        </div>
-                        <div class="card-body">
-                            <div style="width: auto; height: 700px;">
-                                <ngx-monaco-editor [options]="editorOptions" [(ngModel)]="code"></ngx-monaco-editor>
+
+<div class="row">
+    <div class="row bg-dark">
+        <div class="container-fluid bg-black">
+            <div class="row justify-content-center">
+                <div class="col-md-12">
+                    <br>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card text-white bg-dark  mb-6">
+                                <div class="card-header" align="center">INPUT
+                                </div>
+                                <div class="card-body">
+                                    <div style="width: auto; height: 700px;">
+                                        <ngx-monaco-editor [options]="editorOptions" [(ngModel)]="code"></ngx-monaco-editor>
+                                    </div>
+                                </div>
+                                <br>
                             </div>
                         </div>
-                        <br>
+                        <div class="col-md-6">
+                            <div class="card text-white bg-dark  mb-6">
+                                <div class="card-header" align="center">OUPUT</div>
+                                <div class="card-body">
+                                    <div style="width: auto; height: 700px;">
+                                        <ngx-monaco-editor [formControl]="consola" [options]="consoleOptions" [(ngModel)]="console" aria-readonly="true">
+                                        </ngx-monaco-editor>
+                                    </div>
+                                </div>
+                                <br>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="col-md-6">
-                    <div class="card text-white bg-dark  mb-3">
-                        <div class="card-header">OUPUT</div>
-                        <div class="card-body">
-                            <div style="width: auto; height: 700px;">
-                                <ngx-monaco-editor [formControl]="consola" [options]="consoleOptions" [(ngModel)]="console" aria-readonly="true">
-                                </ngx-monaco-editor>
-                            </div>
-                        </div>
-                        <br>
-                    </div>
+            </div>
+            <br>
+        </div>
+        <br>
+    </div>
+
+    <div *ngIf="mostrarTabla">
+        <div class="bg-black">
+            <div align="center">
+                <div class="col-md-9 bg-warning">
+                    <h1>Tabla de errores</h1>
+                    <table class="table table-dark">
+                        <thead>
+                            <tr class="bg-dark  ">
+                                <th>Tipo</th>
+                                <th>Descripcion</th>
+                                <th>Linea</th>
+                                <th>Columna</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!--  -->
+                            <tr *ngFor="let e of getErrores">
+                                <td>{{e.tipo}}</td>
+                                <td>{{e.desc}}</td>
+                                <td>{{e.fila}}</td>
+                                <td>{{e.colum}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <br><br>
+            <div align="center">
+                <div class="col-md-9 bg-warning">
+                    <h1>Tabla de Símbolos</h1>
+                    <table class="table table-dark">
+                        <thead>
+                            <tr class="bg-warning">
+                                <th>Identificador</th>
+                                <th>Tipo</th>
+                                <th>Entorno</th>
+                                <th>Linea</th>
+                                <th>Columna</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- *ngFor="let e of data_simbolo" -->
+                            <tr>
+                                <td>a</td>
+                                <td>Int</td>
+                                <td>Global</td>
+                                <td>1</td>
+                                <td>1</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
     </div>
-    <br>
 </div>
