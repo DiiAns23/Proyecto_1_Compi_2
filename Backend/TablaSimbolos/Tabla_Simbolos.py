@@ -1,4 +1,3 @@
-from typing import List
 from TablaSimbolos.Tipo import TIPO
 from TablaSimbolos.Excepcion import Excepcion
 

@@ -8,11 +8,13 @@ import { AnalizadorComponent } from './analizador/analizador.component';
 import { MonacoEditorModule,MONACO_PATH } from '@materia-ui/ngx-monaco-editor';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { HomeComponent } from './home/home.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     AnalizadorComponent,
+    HomeComponent,
 
   ],
   imports: [

@@ -19,6 +19,7 @@ sys.setrecursionlimit(10000000)
 app = Flask(__name__)
 CORS(app)
 
+
 @app.route('/saludo', methods = ["GET"])
 def saludo():
     return "Hola mundo"
@@ -35,6 +36,10 @@ def prueba():
 @app.route('/salida')
 def salida():
     global tmp_val
+    global Excepciones
+    global Tabla
+    Excepciones = []
+    Tabla = {}
     instrucciones = Analizar(tmp_val)
     ast = Arbol(instrucciones)
     TsgGlobal = Tabla_Simbolos()
@@ -42,8 +47,7 @@ def salida():
     Nativas(ast)
     for error in errores:
         ast.getExcepciones().append(error)
-        ast.updateConsola(error.toString())
-
+        Excepciones.append(error.toString2())
     for instruccion in ast.getInst():
         if isinstance(instruccion, Funcion):
             ast.setFunciones(instruccion)
@@ -53,7 +57,7 @@ def salida():
             value = instruccion.interpretar(ast, TsgGlobal)
             if isinstance(value, Excepcion):
                 ast.getExcepciones().append(value)
-                ast.updateConsola(value.toString())
+                Excepciones.append(value.toString2())
             if isinstance(value, Return):
                 err = Excepcion("Semantico", "Return fuera de ciclo", instruccion.fila, instruccion.colum)
                 ast.getExcepciones().append(err)
@@ -68,6 +72,11 @@ def salida():
                 ast.updateConsola(err.toString())
     consola = ast.getConsola()
     return json.dumps(consola)
+
+@app.route('/errores')
+def getErrores():
+    global Excepciones
+    return {'valores': Excepciones}
 
 if __name__ == '__main__':
     app.run(debug = True, port=5200)

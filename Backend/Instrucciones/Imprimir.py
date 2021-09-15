@@ -13,18 +13,19 @@ class Imprimir(Instruccion):
     
     def interpretar(self, tree, tabla):
         value = ""
-        for x in self.exp:
-            aux = x.interpretar(tree, tabla)
-            if isinstance(aux, Excepcion):
-                return aux
-            if isinstance(aux, List):
-                aux = self.getValores(aux)
-                if len(aux) == 1:
-                    aux = aux[0]
-            if isinstance(aux, Dict):
-                aux = self.getValores2(aux)
-            value = value + str(aux)
-                    
+        if self.exp != None:
+            for x in self.exp:
+                aux = x.interpretar(tree, tabla)
+                if isinstance(aux, Excepcion):
+                    return aux
+                if isinstance(aux, List):
+                    aux = self.getValores(aux)
+                    if len(aux) == 1:
+                        aux = aux[0]
+                if isinstance(aux, Dict):
+                    aux = self.getValores2(aux)
+                value = value + str(aux)
+
         if self.inst == "println":
             tree.updateConsola(value)
         else:
