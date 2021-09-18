@@ -1,3 +1,5 @@
+from TablaSimbolos.Tipo import TIPO
+from typing import Dict, List
 from Instrucciones.Continue import Continue
 from Instrucciones.Break import Break
 from Instrucciones.Return import Return
@@ -38,7 +40,6 @@ def salida():
     global tmp_val
     global Excepciones
     global Tabla
-    Excepciones = []
     Tabla = {}
     instrucciones = Analizar(tmp_val)
     ast = Arbol(instrucciones)
@@ -46,8 +47,7 @@ def salida():
     ast.setTSglobal(TsgGlobal)
     Nativas(ast)
     for error in errores:
-        ast.getExcepciones().append(error)
-        Excepciones.append(error.toString2())
+        ast.setExcepciones(error)
     for instruccion in ast.getInst():
         if isinstance(instruccion, Funcion):
             ast.setFunciones(instruccion)
@@ -56,27 +56,115 @@ def salida():
         if not (isinstance(instruccion, Funcion)):
             value = instruccion.interpretar(ast, TsgGlobal)
             if isinstance(value, Excepcion):
-                ast.getExcepciones().append(value)
-                Excepciones.append(value.toString2())
+                ast.setExcepciones(value)
             if isinstance(value, Return):
                 err = Excepcion("Semantico", "Return fuera de ciclo", instruccion.fila, instruccion.colum)
-                ast.getExcepciones().append(err)
-                ast.updateConsola(err.toString())
+                ast.setExcepciones(err)
             if isinstance(value, Break):
                 err = Excepcion("Semantico", "Break fuera de ciclo", instruccion.fila, instruccion.colum)
-                ast.getExcepciones().append(err)
-                ast.updateConsola(err.toString())
+                ast.setExcepciones(err)
             if isinstance(value, Continue):
                 err = Excepcion("Semantico", "Continue fuera de ciclo", instruccion.fila, instruccion.colum)
-                ast.getExcepciones().append(err)
-                ast.updateConsola(err.toString())
+                ast.setExcepciones(err)
+    Excepciones = ast.getExcepciones()
+    print("Tabla de Simbolos Global")
+    global Simbolos
+    Simbolos = ast.getTSGlobal().getTablaG()
     consola = ast.getConsola()
     return json.dumps(consola)
 
 @app.route('/errores')
 def getErrores():
     global Excepciones
-    return {'valores': Excepciones}
+    aux = []
+    for x in Excepciones:
+        aux.append(x.toString2())
+    return {'valores': aux}
+
+@app.route('/simbolos')
+def getTabla():
+    global Simbolos
+    Dic = []
+    for x in Simbolos:
+        aux = Simbolos[x].getValor()
+        tipo = Simbolos[x].getTipo()
+        tipo = getTipo(tipo)
+        fila = Simbolos[x].getFila()
+        colum = Simbolos[x].getColum()
+        if isinstance(aux, List):
+            aux = getValores(aux)
+            a = []
+            a.append(str(x))
+            a.append(str(aux))
+            a.append('Array')
+            a.append('Global')
+            a.append(str(fila))
+            a.append(str(colum))
+            Dic.append(a)
+        elif isinstance(aux, Dict):
+            aux = getValores2(aux)
+            a = []
+            a.append(str(x))
+            a.append(str(aux))
+            a.append('Struct')
+            a.append('Global')
+            a.append(str(fila))
+            a.append(str(colum))
+            Dic.append(a)
+        else:
+            a = []
+            a.append(str(x))
+            a.append(str(aux))
+            a.append(tipo)
+            a.append('Global')
+            a.append(str(fila))
+            a.append(str(colum))
+            Dic.append(a)
+    return {'valores':Dic}
+
+def getValores(anterior):
+    actual = []
+    for x in anterior:
+        a = x.getValor()
+        if isinstance(a, List):
+            value = getValores(a)
+            actual.append(value)
+        elif isinstance(a, Dict):
+            value = getValores2(a)
+            actual.append(value)
+        else:
+            actual.append(x.getValor())
+    return actual
+
+def getValores2( dict):
+    val = "("
+    for x in dict:
+        a = dict[x].getValor()
+        if isinstance(a, List):
+            value = getValores(a)
+            val += str(value) + ", "
+        elif isinstance(a, Dict):
+            value = getValores2(a)
+            val += str(value) + ", "
+        else:
+            val += str(dict[x].getValor()) + ", "
+    val = val[:-2]  
+    val += ")"
+    return val
+
+def getTipo(tipo):
+    if tipo == TIPO.ENTERO:
+        return "Int64"
+    if tipo == TIPO.STRING:
+        return "String"
+    if tipo == TIPO.CHAR:
+        return "Char"
+    if tipo == TIPO.FLOAT:
+        return "Float64"
+    if tipo == TIPO.BOOL:
+        return "Bool"
+    if tipo == TIPO.NULO:
+        return "nothing"
 
 if __name__ == '__main__':
     app.run(debug = True, port=5200)

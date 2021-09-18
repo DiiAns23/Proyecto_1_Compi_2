@@ -25,15 +25,13 @@ class Funcion(Instruccion):
             else:
                 value = ins.interpretar(tree, entorno)
             if isinstance(value, Excepcion): 
-                tree.getExcepciones().append(value)
-                tree.updateConsola(value.toString())
+                tree.setExcepciones(value)
             if isinstance(value, Return):
                 self.tipo = value.tipo
                 return value.value
             if isinstance(value, Break):
                 error  = Excepcion("Semantico", "Break fuera de ciclo", ins.fila, ins.colum)
-                tree.getExcepciones().append(error)
-                tree.updateConsola(error.toString())
+                tree.setExcepciones(error)
         return None
         
         

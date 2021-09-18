@@ -10,9 +10,6 @@
                 <input (click)="analizar()" type="button" class="btn btn-dark" value="Analizar">
             </li>
             <li class="nav-link">
-                <input (click)="ast()" type="button" class="btn btn-dark" value="Visualizar AST">
-            </li>
-            <li class="nav-link">
                 <input style="display:none;" accept=".ty" type="file" (change)="abrir($event)" #archivo>
                 <input (click)="archivo.click()" type="button" class="btn btn-dark" value="Abrir">
             </li>
@@ -28,6 +25,16 @@
             </li>
             </span>
             <span *ngIf="mostrarTabla">
+                <li class="nav-link">
+                    <input (click)="ocultar()" type="button" class="btn btn-dark" value="Ocultar">
+                </li>
+            </span>
+            <span *ngIf="!mostrarSimbolo">
+                <li class="nav-link">
+                    <input (click)="tabla()" type="button" class="btn btn-dark" value="Simbolos">
+                </li>
+            </span>
+            <span *ngIf="mostrarSimbolo">
                 <li class="nav-link">
                     <input (click)="ocultar()" type="button" class="btn btn-dark" value="Ocultar">
                 </li>
@@ -75,9 +82,9 @@
         <br>
     </div>
 
-    <div *ngIf="mostrarTabla">
+    <div>
         <div class="bg-black">
-            <div align="center">
+            <div align="center" *ngIf="mostrarTabla">
                 <div class="col-md-9 bg-warning">
                     <h1>Tabla de errores</h1>
                     <table class="table table-dark">
@@ -102,7 +109,7 @@
                 </div>
             </div>
             <br><br>
-            <div align="center">
+            <div align="center" *ngIf="mostrarSimbolo">
                 <div class="col-md-9 bg-warning">
                     <h1>Tabla de Símbolos</h1>
                     <table class="table table-dark">
@@ -117,12 +124,12 @@
                         </thead>
                         <tbody>
                             <!-- *ngFor="let e of data_simbolo" -->
-                            <tr>
-                                <td>a</td>
-                                <td>Int</td>
-                                <td>Global</td>
-                                <td>1</td>
-                                <td>1</td>
+                            <tr *ngFor="let e of tablaS">
+                                <td>{{e.id}}</td>
+                                <td>{{e.tipo}}</td>
+                                <td>{{e.entorno}}</td>
+                                <td>{{e.fila}}</td>
+                                <td>{{e.colum}}</td>
                             </tr>
                         </tbody>
                     </table>

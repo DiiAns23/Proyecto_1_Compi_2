@@ -34,8 +34,7 @@ class For(Instruccion):
                         for instruccion in self.instrucciones:
                             result = instruccion.interpretar(tree, entorno)
                             if isinstance(result, Excepcion):
-                                tree.getExcepciones().append(result)
-                                tree.updateConsola(result.toString())
+                                tree.setExcepciones(result)
                             if isinstance(result, Return): return result
                             if isinstance(result, Break): return None
                             if isinstance(result, Continue): break
@@ -83,8 +82,7 @@ class For(Instruccion):
                     for instruccion in self.instrucciones:
                         result = instruccion.interpretar(tree, entorno)
                         if isinstance(result, Excepcion):
-                            tree.getExcepciones().append(result)
-                            tree.updateConsola(result.toString())
+                            tree.setExcepciones(result)
                         if isinstance(result, Return): return result
                         if isinstance(result, Break): return None
                         if isinstance(result, Continue): break
@@ -100,8 +98,7 @@ class For(Instruccion):
             for instruccion in self.instrucciones:
                 result = instruccion.interpretar(tree, entorno)
                 if isinstance(result, Excepcion):
-                    tree.getExcepciones().append(result)
-                    tree.updateConsola(result.toString())
+                    tree.setExcepciones(result)
                 if isinstance(result, Return): return result
                 if isinstance(result, Break): return None
                 if isinstance(result, Continue): break

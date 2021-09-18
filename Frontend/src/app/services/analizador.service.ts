@@ -26,7 +26,14 @@ export class AnalizadorService {
   }
 
   Errores(){
-    const url = 'http://localhost:5200/errores'
+    // const url = 'http://localhost:5200/errores'
+    const url = 'https://calm-dusk-76175.herokuapp.com/errores'
+    return this.http.get<any>(url)
+  }
+
+  Tabla(){
+    // const url = 'http://localhost:5200/simbolos'
+    const url = 'https://calm-dusk-76175.herokuapp.com/simbolos'
     return this.http.get<any>(url)
   }
 }

@@ -26,8 +26,7 @@ class If(Instruccion):
                 for instruccion in self.bloqueIf:
                     result = instruccion.interpretar(tree, entorno)
                     if isinstance(result, Excepcion):
-                        tree.getExcepciones().append(result)
-                        tree.updateConsola(result.toString())
+                        tree.setExcepciones(result)
                     if isinstance(result, Return): return result
                     if isinstance(result, Break): return result
                     if isinstance(result, Continue):return result
@@ -37,8 +36,7 @@ class If(Instruccion):
                     for instruccion in self.bloqueElse:
                         result = instruccion.interpretar(tree, entorno)
                         if isinstance(result, Excepcion):
-                            tree.getExcepciones().append(result)
-                            tree.updateConsola(result.toString())
+                            tree.setExcepciones(result)
                         if isinstance(result, Return): return result
                         if isinstance(result, Break): return result
                         if isinstance(result, Continue):return result

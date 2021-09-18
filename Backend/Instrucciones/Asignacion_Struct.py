@@ -20,7 +20,6 @@ class Asignacion_Struct(Instruccion):
         if struct.mutable == True:
             value = self.valor.interpretar(tree, table)
             if isinstance(value, Excepcion): return value
-            
             claves = []
             for params in self.parametros:
                 claves.append(str(params))
@@ -30,7 +29,3 @@ class Asignacion_Struct(Instruccion):
         else:
             return Excepcion("Semantico", "No se pueden realizar cambios", self.fila, self.colum)
         
-        
-
-
-    

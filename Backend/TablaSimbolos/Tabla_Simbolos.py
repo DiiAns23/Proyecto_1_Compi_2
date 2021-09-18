@@ -7,6 +7,9 @@ class Tabla_Simbolos:
         self.tabla = {} # Al inicio es un Diccionario Vacio
         self.anterior = anterior #Al inicio no hay nada
     
+    def getTablaG(self):
+        return self.tabla
+
     def setTabla(self, simbolo, bandera = False):
         if simbolo.id in self.tabla:
             return "Asignacion"

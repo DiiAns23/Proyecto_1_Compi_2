@@ -5,7 +5,14 @@ class Arbol:
         self.excepciones = []
         self.consola = ""
         self.tsglobal = None
+        self.tsgInterpretada = {}
     
+    def setTsgI(self, entorno, valor):
+        self.tsgInterpretada[entorno] = valor
+    
+    def getTsgI(self):
+        return self.tsgInterpretada
+
     def getInst(self):
         return self.instrucciones
     
@@ -28,7 +35,7 @@ class Arbol:
         return self.excepciones
     
     def setExcepciones(self, excep):
-        self.excepciones = excep
+        self.excepciones.append(excep)
     
     def getConsola(self):
         return self.consola

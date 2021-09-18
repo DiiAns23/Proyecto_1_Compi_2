@@ -25,8 +25,7 @@ class While(Instruccion):
                         entorno = Tabla_Simbolos(table)
                         value = instruccion.interpretar(tree, entorno)
                         if isinstance(value, Excepcion):
-                            tree.getExcepciones().append(value)
-                            tree.updateConsola(value.toString())
+                            tree.setExcepciones(value)
                         if isinstance(value, Break): 
                             return None
                         if isinstance(value, Return): return value
